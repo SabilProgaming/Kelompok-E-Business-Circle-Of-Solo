@@ -12,11 +12,14 @@ use App\Http\Controllers\Admin\ScentController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [StorefrontController::class, 'home'])->name('home');
+Route::get('/products', [StorefrontController::class, 'catalog'])->name('products.index');
+Route::get('/product/{product}', [StorefrontController::class, 'detail'])->name('products.show');
+Route::get('/about', [StorefrontController::class, 'about'])->name('about');
+Route::get('/contact', [StorefrontController::class, 'contact'])->name('contact');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
