@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'description', 'brand_id', 'category_id', 'created_at'])]
+#[Fillable(['name', 'description', 'top_notes', 'middle_notes', 'base_notes', 'longevity', 'sillage', 'brand_id', 'category_id', 'created_at'])]
 class Product extends Model
 {
     use HasFactory;
@@ -51,5 +51,20 @@ class Product extends Model
     public function scents(): BelongsToMany
     {
         return $this->belongsToMany(Scent::class, 'product_scents')->withPivot('id');
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating(): float
+    {
+        return round($this->reviews()->avg('rating') ?? 0, 1);
     }
 }

@@ -16,6 +16,13 @@
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
+    {{-- Apply dark theme immediately to prevent flash --}}
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-theme-preload');
+        }
+    </script>
+
     <style>
         [x-cloak] { display: none !important; }
 
@@ -30,14 +37,30 @@
         }
     </style>
 </head>
-<body class="font-sans min-h-screen bg-[var(--color-background)] text-[var(--color-primary)]" x-data="{ isOpen: false }" x-init="$nextTick(() => window.lucide && window.lucide.createIcons())">
-<div class="flex flex-col min-h-screen relative">
+<body class="font-sans min-h-screen transition-colors duration-700">
+<div class="flex flex-col min-h-screen relative"
+     x-data="{
+         isOpen: false,
+         isDark: (localStorage.getItem('theme') === 'dark'),
+         toggleDark() {
+             this.isDark = !this.isDark;
+             localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+             document.body.classList.toggle('dark-theme', this.isDark);
+         }
+     }"
+     x-init="
+         if (isDark) document.body.classList.add('dark-theme');
+         document.documentElement.classList.remove('dark-theme-preload');
+         $nextTick(() => { if(window.lucide) window.lucide.createIcons(); });
+     ">
     <div class="noise-overlay"></div>
 
     @php
         $navLinks = [
             ['name' => 'Home', 'route' => 'home', 'active' => fn () => request()->routeIs('home')],
             ['name' => 'Collections', 'route' => 'products.index', 'active' => fn () => request()->routeIs('products.*')],
+            ['name' => 'Compare', 'route' => 'compare.index', 'active' => fn () => request()->routeIs('compare.*')],
+            ['name' => 'Persona Quiz', 'route' => 'persona.index', 'active' => fn () => request()->routeIs('persona.*')],
             ['name' => 'About', 'route' => 'about', 'active' => fn () => request()->routeIs('about')],
             ['name' => 'Contact', 'route' => 'contact', 'active' => fn () => request()->routeIs('contact')],
         ];
@@ -70,6 +93,10 @@
         </div>
 
         <div class="hidden md:flex items-center space-x-6">
+            <button type="button" @click="toggleDark()" class="hover:text-luxury-gold transition-all duration-300 transform hover:scale-110 text-luxury-charcoal" aria-label="Toggle Dark Mode" id="dark-mode-toggle">
+                <svg x-show="!isDark" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <svg x-show="isDark" x-cloak xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            </button>
             <button type="button" class="hover:text-luxury-gold transition-all duration-300 transform hover:scale-110 text-luxury-charcoal" aria-label="Search">
                 <i data-lucide="search" class="w-[18px] h-[18px]" style="stroke-width:1"></i>
             </button>
@@ -88,9 +115,12 @@
             @auth
                 @if($dashboardRoute)
                     <a href="{{ $dashboardRoute }}" class="text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap">
-                        Dashboard
+                        Admin
                     </a>
                 @endif
+                <a href="{{ route('user.dashboard') }}" class="text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap">
+                    My Orders
+                </a>
                 <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
                     @csrf
                     <button type="submit" class="inline-flex items-center text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap leading-none">
@@ -172,6 +202,9 @@
             <a href="#" class="hover:text-luxury-gold transition-colors">Legal</a>
         </div>
     </footer>
+
+    {{-- AI Parfum Concierge Chatbot --}}
+    @include('components.ai-chat-widget')
 </div>
 
 <script>

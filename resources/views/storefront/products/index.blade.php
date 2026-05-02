@@ -152,7 +152,7 @@
                                 <h3 class="font-serif text-2xl font-light group-hover:italic transition-all duration-500 px-4">{{ $product->name }}</h3>
                                 <div class="flex items-center justify-center space-x-3 opacity-30 group-hover:opacity-100 transition-opacity duration-500">
                                     <span class="w-6 h-[1px] bg-luxury-gold"></span>
-                                    <p class="text-[9px] text-luxury-charcoal font-medium tracking-widest">${{ number_format($product->variants->first()->price ?? 0, 0, '.', ',') }}.00</p>
+                                    <p class="text-[9px] text-luxury-charcoal font-medium tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
                                     <span class="w-6 h-[1px] bg-luxury-gold"></span>
                                 </div>
                             </div>

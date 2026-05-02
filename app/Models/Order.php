@@ -12,13 +12,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['user_id', 'total_price', 'shipping_cost', 'status', 'created_at'])]
+#[Fillable(['user_id', 'order_number', 'recipient_name', 'phone', 'shipping_address', 'city', 'postal_code', 'payment_method', 'total_price', 'shipping_cost', 'status', 'created_at'])]
 class Order extends Model
 {
     use HasFactory;
 
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = null;
 
     protected function casts(): array
     {
