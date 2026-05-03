@@ -10,18 +10,13 @@
 					'id' => $product->id,
 					'name' => $product->name,
 					'description' => $product->description,
-					'brand_id' => $product->brand_id,
-					'category_id' => $product->category_id,
-
-					// scent details
 					'top_notes' => $product->top_notes,
 					'middle_notes' => $product->middle_notes,
 					'base_notes' => $product->base_notes,
 					'longevity' => $product->longevity,
 					'sillage' => $product->sillage,
-					'season' => $product->season,
-					'gender' => $product->gender,
-
+					'brand_id' => $product->brand_id,
+					'category_id' => $product->category_id,
 					'created_at' => optional($product->created_at)?->format('d/m/Y') ?? '-',
 					'brand_name' => $product->brand?->name,
 					'category_name' => $product->category?->name,
@@ -53,18 +48,13 @@
 			oldProductId: @js(old('context_product_id')),
 			oldName: @js(old('name')),
 			oldDescription: @js(old('description')),
-			oldBrandId: @js(old('brand_id')),
-			oldCategoryId: @js(old('category_id')),
-
-			// scent details
 			oldTopNotes: @js(old('top_notes')),
 			oldMiddleNotes: @js(old('middle_notes')),
 			oldBaseNotes: @js(old('base_notes')),
 			oldLongevity: @js(old('longevity')),
 			oldSillage: @js(old('sillage')),
-			oldSeason: @js(old('season')),
-			oldGender: @js(old('gender')),
-
+			oldBrandId: @js(old('brand_id')),
+			oldCategoryId: @js(old('category_id')),
 			oldScentIds: @js(old('scent_ids', [])),
 			oldVariants: @js(old('variants', [])),
 			oldRemoveImageIds: @js(old('remove_image_ids', [])),
@@ -187,57 +177,97 @@
 		</x-admin.ui.card>
 
 		<x-admin.modal open="isModalOpen" titleVar="modalTitle" maxWidth="max-w-5xl">
-			<div class="p-4 bg-[#F8F8F8] border border-gray-200 text-[#0F0F0F] rounded-none mb-6 flex items-start gap-3">
-				<span class="text-lg">ℹ️</span>
-				<div>
-					<p class="font-semibold text-sm">Product Form</p>
-					<p class="text-xs text-gray-500 mt-1">Form ini mendukung upload multiple image, multi-select scents, dan dynamic variants.</p>
-				</div>
-			</div>
+            <div class="p-4 bg-[#F8F8F8] border border-gray-200 text-[#0F0F0F] rounded-none mb-6 flex items-start gap-3">
+                <span class="text-lg">ℹ️</span>
+                <div>
+                    <p class="font-semibold text-sm">Product Form</p>
+                    <p class="text-xs text-gray-500 mt-1">Form ini mendukung upload multiple image, multi-select scents, dan dynamic variants.</p>
+                </div>
+            </div>
 
-			<form :action="formAction" method="POST" enctype="multipart/form-data" class="space-y-6" @submit="isSubmitting = true">
-				@csrf
+            <form :action="formAction" method="POST" enctype="multipart/form-data" class="space-y-6" @submit="isSubmitting = true">
+                @csrf
 
-				<template x-if="formMethod !== 'POST'">
-					<input type="hidden" name="_method" :value="formMethod">
-				</template>
+                <template x-if="formMethod !== 'POST'">
+                    <input type="hidden" name="_method" :value="formMethod">
+                </template>
 
-				<input type="hidden" name="context_product_id" :value="productId">
+                <input type="hidden" name="context_product_id" :value="productId">
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-					<div class="space-y-4">
-						<div>
-							<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Product Name</label>
-							<input type="text" name="name" x-model="name" required class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
-						</div>
-						<div>
-							<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Description</label>
-							<textarea rows="3" name="description" x-model="description" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm"></textarea>
-						</div>
-						<div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Product Name</label>
+                            <input type="text" name="name" x-model="name" required class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Description</label>
+                            <textarea rows="3" name="description" x-model="description" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm"></textarea>
+                        </div>
+
+						<!-- Scent details -->
+						<div class="grid grid-cols-1 gap-4">
 							<div>
-								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Brand</label>
-								<select name="brand_id" x-model="brandId" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
-									<option value="">Select Brand</option>
-									@foreach($brands as $brand)
-										<option value="{{ $brand->id }}">{{ $brand->name }}</option>
-									@endforeach
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1">Top Notes</label>
+								<input type="text" name="top_notes" x-model="topNotes" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm" placeholder="e.g. Bergamot, Lemon" />
+							</div>
+							<div>
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1">Middle Notes</label>
+								<input type="text" name="middle_notes" x-model="middleNotes" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm" placeholder="e.g. Rose, Jasmine" />
+							</div>
+							<div>
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1">Base Notes</label>
+								<input type="text" name="base_notes" x-model="baseNotes" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm" placeholder="e.g. Vetiver, Amber" />
+							</div>
+						</div>
+						<!-- end scent details -->
+//
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Brand</label>
+                                <select name="brand_id" x-model="brandId" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
+                                    <option value="">Select Brand</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Category</label>
+                                <select name="category_id" x-model="categoryId" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 bg-[#F8F8F8] p-6 border-l-4 border-[var(--color-secondary)]">
+                        <h4 class="text-[10px] uppercase font-bold tracking-widest text-[#0F0F0F] border-b border-gray-200 pb-2">Images & Scents</h4>
+						<!-- Longevity & sillage -->
+						<div class="mt-4 grid grid-cols-2 gap-4">
+							<div>
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1">Longevity</label>
+								<select name="longevity" x-model="longevity" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors sm:text-sm">
+									<option value="">Select</option>
+									@for($i = 1; $i <= 5; $i++)
+										<option value="{{ $i }}">{{ $i }} / 5</option>
+									@endfor
 								</select>
 							</div>
 							<div>
-								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Category</label>
-								<select name="category_id" x-model="categoryId" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-gray-50/50 focus:outline-none focus:border-[var(--color-primary)] focus:bg-white transition-colors sm:text-sm">
-									<option value="">Select Category</option>
-									@foreach($categories as $category)
-										<option value="{{ $category->id }}">{{ $category->name }}</option>
-									@endforeach
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1">Sillage</label>
+								<select name="sillage" x-model="sillage" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors sm:text-sm">
+									<option value="">Select</option>
+									@for($i = 1; $i <= 5; $i++)
+										<option value="{{ $i }}">{{ $i }} / 5</option>
+									@endfor
 								</select>
 							</div>
 						</div>
-					</div>
-
-					<div class="space-y-4 bg-[#F8F8F8] p-6 border-l-4 border-[var(--color-secondary)]">
-						<h4 class="text-[10px] uppercase font-bold tracking-widest text-[#0F0F0F] border-b border-gray-200 pb-2">Images & Scents</h4>
+						<!-- end longevity & sillage -->
 						<div>
 							<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-1 transition-colors">Upload Images</label>
 							<input type="file" name="images[]" multiple accept="image/*" @change="handleImagesChange"
@@ -254,64 +284,52 @@
 								</div>
 							</div>
 						</template>
-
-						<template x-if="existingImages.length > 0">
-							<div>
-								<p class="text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-2">Existing Images</p>
-								<div class="grid grid-cols-3 gap-2">
-									<template x-for="image in existingImages" :key="`img-${image.id}`">
-										<label class="relative border border-gray-200 rounded overflow-hidden cursor-pointer">
-											<img :src="image.image_url" class="w-full h-16 object-cover">
-											<div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] px-1 py-0.5 flex items-center gap-1">
-												<input type="checkbox" name="remove_image_ids[]" :value="image.id" x-model="removeImageIds" class="w-3 h-3">
-												Remove
-											</div>
-										</label>
-									</template>
-								</div>
-							</div>
-						</template>
-
-						<div>
-							<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-2 transition-colors">Assign Scents</label>
-							<div class="mb-2">
-								<input type="text"
-									   placeholder="Search scents..."
-									   x-model="scentSearch"
-									   class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors sm:text-sm" />
-							</div>
-							<template x-if="selectedScentIds.length > 0">
-								<div class="flex flex-wrap gap-2 mb-3">
-									<template x-for="scentId in selectedScentIds" :key="`chip-${scentId}`">
-										<button type="button"
-												class="inline-flex items-center gap-2 px-3 py-1 text-[9px] uppercase tracking-widest bg-[#0F0F0F] text-white"
-												@click="toggleScent(scentId)">
-												<span x-text="scentNameById(scentId)"></span>
-												<span class="text-[10px]">×</span>
-										</button>
-									</template>
-								</div>
-							</template>
-							<div class="max-h-48 overflow-y-auto border border-gray-200 bg-white">
-								<template x-for="scent in filteredScents()" :key="`scent-${scent.id}`">
-									<label class="flex items-center gap-3 px-3 py-2 border-b border-gray-100 text-[10px] uppercase tracking-widest cursor-pointer hover:bg-gray-50">
-										<input type="checkbox"
-												name="scent_ids[]"
-												:value="scent.id"
-												x-model="selectedScentIds"
-												class="w-3.5 h-3.5" />
-										<span x-text="scent.name"></span>
-									</label>
+								<template x-if="existingImages.length > 0">
+									<div>
+										<p class="text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-2">Existing Images</p>
+										<div class="grid grid-cols-3 gap-2">
+											<template x-for="image in existingImages" :key="`img-${image.id}`">
+												<label class="relative border border-gray-200 rounded overflow-hidden cursor-pointer">
+													<img :src="image.image_url" class="w-full h-16 object-cover" :alt="`Product image ${image.id}`">
+													<div class="absolute inset-x-0 bottom-0 bg-black/60 text-white text-[9px] px-2 py-1 flex items-center justify-between gap-2">
+														<span>Remove</span>
+														<input type="checkbox" name="remove_image_ids[]" :value="image.id" x-model="removeImageIds" class="w-3.5 h-3.5" />
+													</div>
+												</label>
+											</template>
+										</div>
+										<p class="text-[10px] text-gray-500 mt-2">Centang untuk menghapus gambar saat menyimpan.</p>
+									</div>
 								</template>
-								<template x-if="filteredScents().length === 0">
-									<p class="px-3 py-3 text-xs text-gray-400">No scents found.</p>
-								</template>
-							</div>
-						</div>
-					</div>
-				</div>
 
-				<div class="border-t border-[#2C2C2C] pt-6">
+								<div class="mt-6">
+									<label class="block text-[10px] font-bold uppercase tracking-widest text-[#2C2C2C] mb-2 transition-colors">Assign Scents</label>
+									<div class="mb-2">
+										<input type="text" placeholder="Search scents..." x-model="scentSearch" class="w-full px-3 py-2.5 border-b-2 border-gray-200 bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors sm:text-sm" />
+									</div>
+									<template x-if="selectedScentIds.length > 0">
+										<div class="flex flex-wrap gap-2 mb-3">
+											<template x-for="scentId in selectedScentIds" :key="`chip-${scentId}`">
+												<button type="button" class="inline-flex items-center gap-2 px-3 py-1 text-[9px] uppercase tracking-widest bg-[#0F0F0F] text-white" @click="toggleScent(scentId)">
+													<span x-text="scentNameById(scentId)"></span>
+													<span class="text-[10px]">×</span>
+												</button>
+											</template>
+										</div>
+									</template>
+									<div class="max-h-48 overflow-y-auto border border-gray-200 bg-white">
+										<template x-for="scent in filteredScents()" :key="`scent-${scent.id}`">
+											<label class="flex items-center gap-3 px-3 py-2 border-b border-gray-100 text-[10px] uppercase tracking-widest cursor-pointer hover:bg-gray-50">
+												<input type="checkbox" name="scent_ids[]" :value="scent.id" x-model="selectedScentIds" class="w-3.5 h-3.5" />
+												<span x-text="scent.name"></span>
+											</label>
+										</template>
+										<template x-if="filteredScents().length === 0">
+											<p class="px-3 py-3 text-xs text-gray-400">No scents found.</p>
+										</template>
+									</div>
+								</div>
+								<div class="border-t border-[#2C2C2C] pt-6">
 					<div class="flex justify-between items-center mb-4">
 						<h4 class="font-serif font-bold text-[#0F0F0F] text-lg">Variants Configuration</h4>
 						<x-admin.ui.button variant="outline" type="button" @click="addVariant()">
@@ -364,184 +382,169 @@
 	<script>
 		function productsPage(config) {
 			return {
-				searchTerm: '',
-				products: config.products || [],
-				productMap: config.productMap || {},
-				allScents: config.scents || [],
-				scentSearch: '',
-				isModalOpen: false,
-				isSubmitting: false,
-				modalTitle: 'Add Product',
-				formAction: '{{ route('admin.products.store') }}',
-				formMethod: 'POST',
-				productId: null,
-				name: '',
-				description: '',
-				brandId: '',
-				categoryId: '',
-				selectedScentIds: [],
-				variants: [],
-				existingImages: [],
-				removeImageIds: [],
-				newImagePreviews: [],
-
-				// scent details
+				// scent detail fields
 				topNotes: '',
 				middleNotes: '',
 				baseNotes: '',
 				longevity: '',
 				sillage: '',
-				season: '',
-				gender: '',
+                searchTerm: '',
+                products: config.products || [],
+                productMap: config.productMap || {},
+                allScents: config.scents || [],
+                scentSearch: '',
+                isModalOpen: false,
+                isSubmitting: false,
+                modalTitle: 'Add Product',
+                formAction: '{{ route('admin.products.store') }}',
+                formMethod: 'POST',
+                productId: null,
+                name: '',
+                description: '',
+                brandId: '',
+                categoryId: '',
+                selectedScentIds: [],
+                variants: [],
+                existingImages: [],
+                removeImageIds: [],
+                newImagePreviews: [],
 
-				initialize() {
-					if (config.hasErrors) {
-						if (config.oldMethod === 'PUT' && config.oldProductId && this.productMap[config.oldProductId]) {
-							this.openEdit(config.oldProductId);
-						} else {
-							this.openCreate();
-						}
+                initialize() {
+                    if (config.hasErrors) {
+                        if (config.oldMethod === 'PUT' && config.oldProductId && this.productMap[config.oldProductId]) {
+                            this.openEdit(config.oldProductId);
+                        } else {
+                            this.openCreate();
+                        }
 
-						this.name = config.oldName || this.name;
-						this.description = config.oldDescription || this.description;
-						this.brandId = config.oldBrandId || this.brandId;
-						this.categoryId = config.oldCategoryId || this.categoryId;
-						this.selectedScentIds = (config.oldScentIds || []).map(String);
+                        this.name = config.oldName || this.name;
+                        this.description = config.oldDescription || this.description;
+                        this.topNotes = config.oldTopNotes ?? this.topNotes;
+                        this.middleNotes = config.oldMiddleNotes ?? this.middleNotes;
+                        this.baseNotes = config.oldBaseNotes ?? this.baseNotes;
+                        this.longevity = config.oldLongevity ?? this.longevity;
+                        this.sillage = config.oldSillage ?? this.sillage;
+                        this.brandId = config.oldBrandId || this.brandId;
+                        this.categoryId = config.oldCategoryId || this.categoryId;
+                        this.selectedScentIds = (config.oldScentIds || []).map(String);
 
-						if (Array.isArray(config.oldVariants) && config.oldVariants.length > 0) {
-							this.variants = config.oldVariants.map(v => ({
-								name: v?.name ?? '',
-								price: v?.price ?? '',
-								stock: v?.stock ?? '',
-							}));
-						}
+                        if (Array.isArray(config.oldVariants) && config.oldVariants.length > 0) {
+                            this.variants = config.oldVariants.map(v => ({
+                                name: v?.name ?? '',
+                                price: v?.price ?? '',
+                                stock: v?.stock ?? '',
+                            }));
+                        }
 
-						this.removeImageIds = (config.oldRemoveImageIds || []).map(id => String(id));
+                        this.removeImageIds = (config.oldRemoveImageIds || []).map(id => String(id));
+                    }
+                },
 
-						// scent details
-						this.topNotes = config.oldTopNotes || '';
-						this.middleNotes = config.oldMiddleNotes || '';
-						this.baseNotes = config.oldBaseNotes || '';
-						this.longevity = config.oldLongevity || '';
-						this.sillage = config.oldSillage || '';
-						this.season = config.oldSeason || '';
-						this.gender = config.oldGender || '';
-					}
-				},
+                filteredScents() {
+                    const keyword = (this.scentSearch || '').toLowerCase();
+                    if (!keyword) {
+                        return this.allScents;
+                    }
+                    return this.allScents.filter(scent => (scent.name || '').toLowerCase().includes(keyword));
+                },
 
-				filteredScents() {
-					const keyword = (this.scentSearch || '').toLowerCase();
-					if (!keyword) {
-						return this.allScents;
-					}
-					return this.allScents.filter(scent => (scent.name || '').toLowerCase().includes(keyword));
-				},
+                scentNameById(id) {
+                    const found = this.allScents.find(scent => String(scent.id) === String(id));
+                    return found ? found.name : id;
+                },
 
-				scentNameById(id) {
-					const found = this.allScents.find(scent => String(scent.id) === String(id));
-					return found ? found.name : id;
-				},
+                toggleScent(id) {
+                    this.selectedScentIds = this.selectedScentIds.filter(item => String(item) !== String(id));
+                },
 
-				toggleScent(id) {
-					this.selectedScentIds = this.selectedScentIds.filter(item => String(item) !== String(id));
-				},
+                filteredProducts() {
+                    if (!this.searchTerm) {
+                        return this.products;
+                    }
 
-				filteredProducts() {
-					if (!this.searchTerm) {
-						return this.products;
-					}
+                    const key = this.searchTerm.toLowerCase();
+                    return this.products.filter(product => (product.name || '').toLowerCase().includes(key));
+                },
 
-					const key = this.searchTerm.toLowerCase();
-					return this.products.filter(product => (product.name || '').toLowerCase().includes(key));
-				},
+                defaultVariant() {
+                    return {name: '', price: '', stock: ''};
+                },
 
-				defaultVariant() {
-					return {name: '', price: '', stock: ''};
-				},
+                openCreate() {
+                    this.isModalOpen = true;
+                    this.isSubmitting = false;
+                    this.modalTitle = 'Add Product';
+                    this.formAction = '{{ route('admin.products.store') }}';
+                    this.formMethod = 'POST';
+                    this.productId = null;
+                    this.name = '';
+                    this.description = '';
+                    this.topNotes = '';
+                    this.middleNotes = '';
+                    this.baseNotes = '';
+                    this.longevity = '';
+                    this.sillage = '';
+                    this.brandId = '';
+                    this.categoryId = '';
+                    this.selectedScentIds = [];
+                    this.scentSearch = '';
+                    this.variants = [this.defaultVariant()];
+                    this.existingImages = [];
+                    this.removeImageIds = [];
+                    this.newImagePreviews = [];
+                },
 
-				openCreate() {
-					this.isModalOpen = true;
-					this.isSubmitting = false;
-					this.modalTitle = 'Add Product';
-					this.formAction = '{{ route('admin.products.store') }}';
-					this.formMethod = 'POST';
-					this.productId = null;
-					this.name = '';
-					this.description = '';
-					this.brandId = '';
-					this.categoryId = '';
-					this.selectedScentIds = [];
-					this.scentSearch = '';
-					this.variants = [this.defaultVariant()];
-					this.existingImages = [];
-					this.removeImageIds = [];
-					this.newImagePreviews = [];
+                openEdit(id) {
+                    const product = this.productMap[id];
+                    if (!product) {
+                        return;
+                    }
 
-					// scent details
-					this.topNotes = '';
-					this.middleNotes = '';
-					this.baseNotes = '';
-					this.longevity = '';
-					this.sillage = '';
-					this.season = '';
-					this.gender = '';
-				},
+                    this.isModalOpen = true;
+                    this.isSubmitting = false;
+                    this.modalTitle = 'Edit Product';
+                    this.formAction = `{{ url('admin/products') }}/${id}`;
+                    this.formMethod = 'PUT';
+                    this.productId = id;
+                    this.name = product.name || '';
+                    this.description = product.description || '';
+                    this.topNotes = product.top_notes || '';
+                    this.middleNotes = product.middle_notes || '';
+                    this.baseNotes = product.base_notes || '';
+                    this.longevity = product.longevity ? String(product.longevity) : '';
+                    this.sillage = product.sillage ? String(product.sillage) : '';
+                    this.brandId = product.brand_id ? String(product.brand_id) : '';
+                    this.categoryId = product.category_id ? String(product.category_id) : '';
+                    this.selectedScentIds = (product.scent_ids || []).map(String);
+                    this.scentSearch = '';
+                    this.variants = (product.variants || []).length > 0
+                        ? product.variants.map(v => ({name: v.name || '', price: v.price || '', stock: v.stock || ''}))
+                        : [this.defaultVariant()];
+                    this.existingImages = product.images || [];
+                    this.removeImageIds = [];
+                    this.newImagePreviews = [];
+                },
 
-				openEdit(id) {
-					const product = this.productMap[id];
-					if (!product) {
-						return;
-					}
+                closeModal() {
+                    this.isModalOpen = false;
+                    this.isSubmitting = false;
+                },
 
-					this.isModalOpen = true;
-					this.isSubmitting = false;
-					this.modalTitle = 'Edit Product';
-					this.formAction = `{{ url('admin/products') }}/${id}`;
-					this.formMethod = 'PUT';
-					this.productId = id;
-					this.name = product.name || '';
-					this.description = product.description || '';
-					this.brandId = product.brand_id ? String(product.brand_id) : '';
-					this.categoryId = product.category_id ? String(product.category_id) : '';
-					this.selectedScentIds = (product.scent_ids || []).map(String);
-					this.scentSearch = '';
-					this.variants = (product.variants || []).length > 0
-						? product.variants.map(v => ({name: v.name || '', price: v.price || '', stock: v.stock || ''}))
-						: [this.defaultVariant()];
-					this.existingImages = product.images || [];
-					this.removeImageIds = [];
-					this.newImagePreviews = [];
+                addVariant() {
+                    this.variants.push(this.defaultVariant());
+                },
 
-					// scent details
-					this.topNotes = product.top_notes || '';
-					this.middleNotes = product.middle_notes || '';
-					this.baseNotes = product.base_notes || '';
-					this.longevity = product.longevity || '';
-					this.sillage = product.sillage || '';
-					this.season = product.season || '';
-					this.gender = product.gender || '';
-				},
+                removeVariant(index) {
+                    this.variants.splice(index, 1);
+                    if (this.variants.length === 0) {
+                        this.variants.push(this.defaultVariant());
+                    }
+                },
 
-				closeModal() {
-					this.isModalOpen = false;
-					this.isSubmitting = false;
-				},
-
-				addVariant() {
-					this.variants.push(this.defaultVariant());
-				},
-
-				removeVariant(index) {
-					this.variants.splice(index, 1);
-					if (this.variants.length === 0) {
-						this.variants.push(this.defaultVariant());
-					}
-				},
-
-				handleImagesChange(event) {
-					const files = event.target.files ? Array.from(event.target.files) : [];
-					this.newImagePreviews = files.map(file => URL.createObjectURL(file));
-				},
+                handleImagesChange(event) {
+                    const files = event.target.files ? Array.from(event.target.files) : [];
+                    this.newImagePreviews = files.map(file => URL.createObjectURL(file));
+                },
 			};
 		}
 	</script>

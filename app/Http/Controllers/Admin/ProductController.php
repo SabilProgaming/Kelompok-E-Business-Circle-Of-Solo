@@ -85,6 +85,11 @@ class ProductController extends Controller
             $product = Product::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
+                'top_notes' => $validated['top_notes'] ?? null,
+                'middle_notes' => $validated['middle_notes'] ?? null,
+                'base_notes' => $validated['base_notes'] ?? null,
+                'longevity' => $validated['longevity'] ?? null,
+                'sillage' => $validated['sillage'] ?? null,
                 'brand_id' => $validated['brand_id'] ?? null,
                 'category_id' => $validated['category_id'] ?? null,
             ]);
@@ -123,6 +128,11 @@ class ProductController extends Controller
             $product->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
+                'top_notes' => $validated['top_notes'] ?? null,
+                'middle_notes' => $validated['middle_notes'] ?? null,
+                'base_notes' => $validated['base_notes'] ?? null,
+                'longevity' => $validated['longevity'] ?? null,
+                'sillage' => $validated['sillage'] ?? null,
                 'brand_id' => $validated['brand_id'] ?? null,
                 'category_id' => $validated['category_id'] ?? null,
             ]);
@@ -185,16 +195,6 @@ class ProductController extends Controller
             if ($variantIds->isNotEmpty()) {
                 CartItem::query()->whereIn('product_variant_id', $variantIds)->delete();
             }
-{
-                $this->deleteLocalPublicFile($image->image_url);
-            }
-
-            $product->images()->delete();
-            $product->scents()->detach();
-$product->variants()->pluck('id');
-            if ($variantIds->isNotEmpty()) {
-                CartItem::query()->whereIn('product_variant_id', $variantIds)->delete();
-            }
             $product->variants()->delete();
             $product->delete();
         });
@@ -213,6 +213,11 @@ $product->variants()->pluck('id');
         return $request->validate([
             'name' => array_merge($requiredRule, ['string', 'max:255']),
             'description' => ['nullable', 'string'],
+            'top_notes' => ['nullable', 'string', 'max:255'],
+            'middle_notes' => ['nullable', 'string', 'max:255'],
+            'base_notes' => ['nullable', 'string', 'max:255'],
+            'longevity' => ['nullable', 'integer', 'between:1,5'],
+            'sillage' => ['nullable', 'integer', 'between:1,5'],
             'brand_id' => ['nullable', 'integer', Rule::exists('brands', 'id')],
             'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
             'scent_ids' => ['nullable', 'array'],
