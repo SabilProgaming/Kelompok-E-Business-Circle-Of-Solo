@@ -12,6 +12,16 @@
 					'description' => $product->description,
 					'brand_id' => $product->brand_id,
 					'category_id' => $product->category_id,
+
+					// scent details
+					'top_notes' => $product->top_notes,
+					'middle_notes' => $product->middle_notes,
+					'base_notes' => $product->base_notes,
+					'longevity' => $product->longevity,
+					'sillage' => $product->sillage,
+					'season' => $product->season,
+					'gender' => $product->gender,
+
 					'created_at' => optional($product->created_at)?->format('d/m/Y') ?? '-',
 					'brand_name' => $product->brand?->name,
 					'category_name' => $product->category?->name,
@@ -45,6 +55,16 @@
 			oldDescription: @js(old('description')),
 			oldBrandId: @js(old('brand_id')),
 			oldCategoryId: @js(old('category_id')),
+
+			// scent details
+			oldTopNotes: @js(old('top_notes')),
+			oldMiddleNotes: @js(old('middle_notes')),
+			oldBaseNotes: @js(old('base_notes')),
+			oldLongevity: @js(old('longevity')),
+			oldSillage: @js(old('sillage')),
+			oldSeason: @js(old('season')),
+			oldGender: @js(old('gender')),
+
 			oldScentIds: @js(old('scent_ids', [])),
 			oldVariants: @js(old('variants', [])),
 			oldRemoveImageIds: @js(old('remove_image_ids', [])),
@@ -365,6 +385,15 @@
 				removeImageIds: [],
 				newImagePreviews: [],
 
+				// scent details
+				topNotes: '',
+				middleNotes: '',
+				baseNotes: '',
+				longevity: '',
+				sillage: '',
+				season: '',
+				gender: '',
+
 				initialize() {
 					if (config.hasErrors) {
 						if (config.oldMethod === 'PUT' && config.oldProductId && this.productMap[config.oldProductId]) {
@@ -388,6 +417,15 @@
 						}
 
 						this.removeImageIds = (config.oldRemoveImageIds || []).map(id => String(id));
+
+						// scent details
+						this.topNotes = config.oldTopNotes || '';
+						this.middleNotes = config.oldMiddleNotes || '';
+						this.baseNotes = config.oldBaseNotes || '';
+						this.longevity = config.oldLongevity || '';
+						this.sillage = config.oldSillage || '';
+						this.season = config.oldSeason || '';
+						this.gender = config.oldGender || '';
 					}
 				},
 
@@ -438,6 +476,15 @@
 					this.existingImages = [];
 					this.removeImageIds = [];
 					this.newImagePreviews = [];
+
+					// scent details
+					this.topNotes = '';
+					this.middleNotes = '';
+					this.baseNotes = '';
+					this.longevity = '';
+					this.sillage = '';
+					this.season = '';
+					this.gender = '';
 				},
 
 				openEdit(id) {
@@ -464,6 +511,15 @@
 					this.existingImages = product.images || [];
 					this.removeImageIds = [];
 					this.newImagePreviews = [];
+
+					// scent details
+					this.topNotes = product.top_notes || '';
+					this.middleNotes = product.middle_notes || '';
+					this.baseNotes = product.base_notes || '';
+					this.longevity = product.longevity || '';
+					this.sillage = product.sillage || '';
+					this.season = product.season || '';
+					this.gender = product.gender || '';
 				},
 
 				closeModal() {

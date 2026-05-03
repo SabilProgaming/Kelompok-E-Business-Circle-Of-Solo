@@ -185,6 +185,16 @@ class ProductController extends Controller
             if ($variantIds->isNotEmpty()) {
                 CartItem::query()->whereIn('product_variant_id', $variantIds)->delete();
             }
+{
+                $this->deleteLocalPublicFile($image->image_url);
+            }
+
+            $product->images()->delete();
+            $product->scents()->detach();
+$product->variants()->pluck('id');
+            if ($variantIds->isNotEmpty()) {
+                CartItem::query()->whereIn('product_variant_id', $variantIds)->delete();
+            }
             $product->variants()->delete();
             $product->delete();
         });
