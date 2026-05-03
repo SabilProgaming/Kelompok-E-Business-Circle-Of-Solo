@@ -219,6 +219,59 @@
                 </div>
 
             </div>
+
+            {{-- Smart Verdict Section --}}
+            @if($product1 && $product2 && !empty($verdict))
+                <div class="mt-16 bg-white border border-luxury-gold/20 p-8 lg:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-5">
+                        <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.3H3.73L12 5.45zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="h-px bg-luxury-gold flex-grow"></div>
+                            <h3 class="text-[10px] uppercase tracking-[0.5em] font-bold text-luxury-gold whitespace-nowrap">Smart Verdict</h3>
+                            <div class="h-px bg-luxury-gold flex-grow"></div>
+                        </div>
+
+                        <div class="text-center mb-12">
+                            <h4 class="text-3xl font-serif mb-4">Which one matches <span class="italic">your persona?</span></h4>
+                            <p class="text-luxury-charcoal/50 text-sm max-w-2xl mx-auto font-light italic">Our expert system has analyzed the olfactory notes of both fragrances to determine their suitability for different personality profiles.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($verdict as $key => $v)
+                                <div class="bg-luxury-cream/30 p-6 border border-luxury-charcoal/5 group hover:border-luxury-gold/30 transition-all duration-500">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <span class="text-2xl">{{ $v['emoji'] }}</span>
+                                        <span class="text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal">{{ $v['name'] }}</span>
+                                    </div>
+                                    
+                                    <p class="text-xs text-luxury-charcoal/60 leading-relaxed mb-4">
+                                        @if($v['winner'] == 1)
+                                            <span class="text-luxury-gold font-bold">{{ $product1->name }}</span> memiliki afinitas aroma yang lebih kuat untuk persona ini dibandingkan pesaingnya.
+                                        @else
+                                            <span class="text-luxury-gold font-bold">{{ $product2->name }}</span> adalah pilihan yang lebih tepat jika Anda memiliki karakter {{ strtolower($v['name']) }}.
+                                        @endif
+                                    </p>
+
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-grow h-1 bg-luxury-charcoal/5 rounded-full overflow-hidden">
+                                            <div class="h-full bg-luxury-gold" style="width: {{ min(100, $v['score'] * 25) }}%"></div>
+                                        </div>
+                                        <span class="text-[8px] font-mono font-bold text-luxury-gold">MATCH</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="mt-12 text-center">
+                            <p class="text-[9px] uppercase tracking-[0.2em] text-luxury-charcoal/30 mb-6 font-bold">Not sure about your persona?</p>
+                            <a href="{{ route('persona.index') }}" class="inline-block px-10 py-4 bg-luxury-charcoal text-white text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-luxury-gold transition-all duration-300 transform hover:-translate-y-1">Take the Persona Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
     </div>
 </div>
