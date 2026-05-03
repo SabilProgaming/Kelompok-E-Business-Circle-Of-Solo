@@ -66,7 +66,7 @@
 								</div>
 
 								<div class="flex items-center justify-between w-full sm:w-auto sm:block text-right">
-									<p class="font-mono text-lg">${{ number_format($unitPrice * $item->quantity, 0, '.', ',') }}.00</p>
+									<p class="font-mono text-lg">Rp {{ number_format($unitPrice * $item->quantity, 0, ',', '.') }}</p>
 									<form method="POST" action="{{ route('cart.items.destroy', $item) }}" class="sm:mt-2">
 										@csrf
 										@method('DELETE')
@@ -86,7 +86,7 @@
 						<div class="space-y-4 text-sm font-light mb-8">
 							<div class="flex justify-between">
 								<span class="text-luxury-charcoal/60">Subtotal</span>
-								<span class="font-mono">${{ number_format($totalPrice, 0, '.', ',') }}.00</span>
+								<span class="font-mono">Rp {{ number_format($totalPrice, 0, ',', '.') }}</span>
 							</div>
 							<div class="flex justify-between">
 								<span class="text-luxury-charcoal/60">Shipping</span>
@@ -95,11 +95,11 @@
 						</div>
 						<div class="flex justify-between items-center border-t border-luxury-charcoal/10 pt-6 mb-8">
 							<span class="uppercase tracking-[0.2em] text-[10px] font-bold">Total</span>
-							<span class="font-mono text-2xl">${{ number_format($totalPrice, 0, '.', ',') }}.00</span>
+							<span class="font-mono text-2xl">Rp {{ number_format($totalPrice, 0, ',', '.') }}</span>
 						</div>
-						<button class="luxury-button w-full">
-							Proceed to Checkout
-						</button>
+                        <a href="{{ route('checkout.index') }}" class="luxury-button w-full text-center block">
+                            Proceed to Checkout
+                        </a>
 					</div>
 				</div>
 			</div>

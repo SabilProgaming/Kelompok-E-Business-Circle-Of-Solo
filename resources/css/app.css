@@ -4,12 +4,23 @@
 @tailwind utilities;
 
 :root {
-    --color-primary: #1a1a1a;
-    --color-secondary: #c5a059;
-    --color-background: #fdfbf7;
-    --color-accent: #2c2c2c;
+    --color-nude: 245 241 234;
+    --color-gold: 197 160 89;
+    --color-charcoal: 26 26 26;
+    --color-cream: 253 251 247;
+    --color-clay: 234 227 213;
+    
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+}
+
+body.dark-theme,
+html.dark-theme-preload body {
+    --color-nude: 26 26 26;
+    --color-gold: 212 175 55;
+    --color-charcoal: 253 251 247;
+    --color-cream: 18 18 18;
+    --color-clay: 38 38 38;
 }
 
 @layer base {
@@ -25,7 +36,7 @@
     }
 
     .luxury-button {
-        @apply relative px-10 py-5 bg-luxury-charcoal text-white font-medium uppercase tracking-[0.3em] text-[9px] transition-all duration-700 hover:bg-luxury-gold hover:tracking-[0.4em] shadow-lg hover:shadow-luxury-gold/20;
+        @apply relative px-10 py-5 bg-luxury-charcoal text-luxury-cream font-medium uppercase tracking-[0.3em] text-[9px] transition-all duration-700 hover:bg-luxury-gold hover:text-white hover:tracking-[0.4em] shadow-lg hover:shadow-luxury-gold/20;
     }
 
     .glass-nav {
@@ -33,10 +44,68 @@
     }
 }
 
-/* Input styling untuk auth pages - hanya border-bottom */
-input[type="email"],
-input[type="password"],
-input[type="text"] {
+/* Dark mode specific overrides that can't rely on CSS variable swapping */
+body.dark-theme .glass-nav {
+    background: rgba(18, 18, 18, 0.85);
+}
+
+body.dark-theme .auth-form input[type="email"],
+body.dark-theme .auth-form input[type="password"],
+body.dark-theme .auth-form input[type="text"] {
+    border-bottom-color: rgba(253, 251, 247, 0.2);
+    color: rgb(253, 251, 247);
+}
+
+body.dark-theme .auth-form input[type="email"]:focus,
+body.dark-theme .auth-form input[type="password"]:focus,
+body.dark-theme .auth-form input[type="text"]:focus {
+    border-color: rgb(212, 175, 55);
+}
+
+/* Dark mode: override all hardcoded bg-white elements */
+body.dark-theme .bg-white {
+    background-color: rgb(28, 28, 28) !important;
+}
+
+body.dark-theme .bg-white\/50 {
+    background-color: rgba(28, 28, 28, 0.5) !important;
+}
+
+body.dark-theme .bg-white\/90 {
+    background-color: rgba(28, 28, 28, 0.9) !important;
+}
+
+body.dark-theme .bg-white\/80 {
+    background-color: rgba(28, 28, 28, 0.8) !important;
+}
+
+body.dark-theme .text-white {
+    color: rgb(253, 251, 247) !important;
+}
+
+/* Dark mode: checkout summary bar stays dark */
+body.dark-theme .bg-luxury-charcoal {
+    background-color: rgb(8, 8, 8) !important;
+}
+
+/* Dark mode: borders and dividers */
+body.dark-theme .border-luxury-charcoal\/10,
+body.dark-theme .border-luxury-charcoal\/5,
+body.dark-theme .border-luxury-charcoal\/20 {
+    border-color: rgba(253, 251, 247, 0.08) !important;
+}
+
+/* Dark mode: smooth transition for all elements */
+body.dark-theme * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+}
+
+/* Input styling untuk auth pages - hanya border-bottom. SCOPED to auth forms only. */
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"] {
     all: revert;
     display: block;
     width: 100%;
@@ -48,9 +117,9 @@ input[type="text"] {
     padding: 0.75rem 0;
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus {
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus,
+.auth-form input[type="text"]:focus {
     outline: none;
     box-shadow: none;
     border-color: #c5a059;

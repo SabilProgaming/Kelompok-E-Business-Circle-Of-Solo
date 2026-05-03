@@ -62,7 +62,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-10">
+                <form method="POST" action="{{ route('login') }}" class="space-y-10 auth-form">
                     @csrf
 
                     <div class="space-y-2 group">

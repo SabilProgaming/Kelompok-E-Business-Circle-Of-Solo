@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="pt-20">
-    <section class="h-screen flex items-center bg-white relative overflow-hidden">
+    <section class="h-screen flex items-center bg-luxury-cream relative overflow-hidden">
         <div class="absolute inset-0 bg-luxury-cream opacity-50 z-0"></div>
         <div class="absolute top-0 right-0 w-1/3 h-full bg-luxury-clay/20 -skew-x-12 transform translate-x-1/2 z-0"></div>
 
@@ -34,7 +34,7 @@
             <div class="relative hidden lg:flex items-center justify-center p-20">
                 <div class="relative w-full max-w-lg aspect-[4/5] z-10">
                     <div class="absolute -inset-10 border border-luxury-gold/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
-                    <div class="absolute inset-0 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden p-6">
+                    <div class="absolute inset-0 bg-luxury-cream shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden p-6">
                         <div class="w-full h-full bg-luxury-nude flex items-center justify-center relative group">
                             <img
                                 src="https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&q=80&w=1200"
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute -bottom-10 -left-10 bg-white p-8 shadow-2xl z-20 max-w-[240px]">
+                    <div class="absolute -bottom-10 -left-10 bg-luxury-cream p-8 shadow-2xl z-20 max-w-[240px]">
                         <p class="text-luxury-gold text-[8px] font-bold tracking-[0.4em] uppercase mb-4">New Arrival</p>
                         <p class="font-serif italic text-xl text-luxury-charcoal leading-tight">Whispering <br /> Amber</p>
                         <div class="h-px w-10 bg-luxury-gold/30 my-4"></div>
@@ -92,20 +92,20 @@
                                 @endif
 
                                 <div class="absolute bottom-6 left-6 right-6 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center">
-                                    <span class="text-[8px] uppercase tracking-[0.4em] text-luxury-gold font-bold bg-white/80 backdrop-blur-md px-6 py-3 rounded-full border border-luxury-gold/10">View Details</span>
+                                    <span class="text-[8px] uppercase tracking-[0.4em] text-luxury-gold font-bold bg-luxury-cream/80 backdrop-blur-md px-6 py-3 rounded-full border border-luxury-gold/10">View Details</span>
                                 </div>
                             </div>
                             <div class="mt-8 text-center space-y-2">
                                 <p class="text-[8px] text-luxury-gold font-bold tracking-[0.4em] uppercase">{{ $product->brand->name ?? 'Unknown Brand' }}</p>
                                 <h3 class="font-serif text-2xl font-light text-luxury-charcoal transition-colors group-hover:text-luxury-gold">{{ $product->name }}</h3>
-                                <p class="text-xs text-luxury-charcoal/30 font-light tracking-widest">${{ number_format($product->variants->first()->price ?? 0, 0, '.', ',') }}.00</p>
+                                <p class="text-xs text-luxury-charcoal/30 font-light tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
                             </div>
                         </a>
                     </div>
                 @endforeach
             </div>
         @else
-            <div class="rounded-3xl border border-luxury-gold/20 bg-white/90 p-16 text-center">
+            <div class="rounded-3xl border border-luxury-gold/20 bg-luxury-cream/90 p-16 text-center">
                 <p class="text-[10px] uppercase tracking-[0.5em] text-luxury-gold font-bold mb-4">No Products Found</p>
                 <h3 class="text-3xl md:text-4xl font-serif text-luxury-charcoal mb-4">Belum ada produk di koleksi saat ini.</h3>
                 <p class="text-sm text-luxury-charcoal/60 max-w-xl mx-auto mb-8">

@@ -11,16 +11,37 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScentController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PersonaQuizController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StorefrontController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/ai/chat', [AiChatController::class, 'chat'])->name('ai.chat');
 
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
 Route::get('/products', [StorefrontController::class, 'catalog'])->name('products.index');
 Route::get('/product/{product}', [StorefrontController::class, 'detail'])->name('products.show');
 Route::get('/about', [StorefrontController::class, 'about'])->name('about');
 Route::get('/contact', [StorefrontController::class, 'contact'])->name('contact');
+
+use App\Http\Controllers\ComparisonController;
+
+Route::get('/persona-quiz', [PersonaQuizController::class, 'index'])->name('persona.index');
+Route::post('/persona-quiz/calculate', [PersonaQuizController::class, 'calculate'])->name('persona.calculate');
+
+Route::get('/compare', [ComparisonController::class, 'index'])->name('compare.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+});
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -59,6 +80,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
+    
+    // User Dashboard Routes
+    Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 });
 
 require __DIR__.'/auth.php';

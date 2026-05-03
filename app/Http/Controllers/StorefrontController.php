@@ -89,7 +89,7 @@ class StorefrontController extends Controller
 
     public function detail(Product $product): View
     {
-        $product->load(['images', 'variants', 'brand', 'category', 'scents']);
+        $product->load(['images', 'variants', 'brand', 'category', 'scents', 'reviews.user']);
 
         $relatedProducts = Product::query()
             ->with(['images', 'variants', 'brand'])
@@ -110,9 +110,17 @@ class StorefrontController extends Controller
                 ->get();
         }
 
+        $isWishlisted = false;
+        if (auth()->check()) {
+            $isWishlisted = \App\Models\Wishlist::where('user_id', auth()->id())
+                ->where('product_id', $product->id)
+                ->exists();
+        }
+
         return view('storefront.products.show', [
             'product' => $product,
             'relatedProducts' => $relatedProducts,
+            'isWishlisted' => $isWishlisted,
         ]);
     }
 
