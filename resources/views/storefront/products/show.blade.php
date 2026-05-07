@@ -40,13 +40,14 @@
                 $defaultVariant = $variants->first();
             @endphp
             <div class="p-8 lg:p-24 flex flex-col justify-center space-y-12 animate-fade-in" x-data="{
-                variants: @js($variants->map(fn ($variant) => ['id' => $variant->id, 'name' => $variant->name, 'price' => (float) $variant->price])),
+                variants: @js($variants->map(fn ($variant) => ['id' => $variant->id, 'name' => $variant->name, 'price' => (float) $variant->price, 'stock' => (int) $variant->stock])),
                 selectedVariantId: {{ $defaultVariant?->id ?? 'null' }},
                 quantity: 1,
                 isWishlisted: {{ $isWishlisted ? 'true' : 'false' }},
                 wishLoading: false,
                 get selectedVariant() { return this.variants.find(v => v.id === this.selectedVariantId); },
                 get formattedPrice() { return this.selectedVariant ? Number(this.selectedVariant.price).toLocaleString('id-ID') : '0'; },
+                get formattedStock() { return this.selectedVariant ? this.selectedVariant.stock : 0; },
                 async toggleWishlist() {
                     if (this.wishLoading) return;
                     if (!{{ auth()->check() ? 'true' : 'false' }}) { window.location.href = '{{ route("login") }}'; return; }
@@ -74,6 +75,7 @@
                             <p class="text-2xl text-luxury-gold font-light font-mono tracking-tighter">Rp <span x-text="formattedPrice"></span></p>
                             <span class="text-[10px] uppercase tracking-[0.3em] text-luxury-charcoal/30 font-medium">{{ $product->category->name ?? '' }}</span>
                         </div>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-luxury-charcoal/40 font-medium">Stock: <span x-text="formattedStock"></span></p>
                         @php $avgRating = $product->averageRating(); $reviewCount = $product->reviews->count(); @endphp
                         @if($reviewCount > 0)
                         <div class="flex items-center space-x-2">
@@ -109,7 +111,7 @@
                                 @endphp
                                 <div class="inline-flex">
                                     <input id="{{ $variantId }}" type="radio" name="variant_id" value="{{ $variant->id }}" class="sr-only peer" @checked($loop->first) x-model="selectedVariantId" />
-                                    <label for="{{ $variantId }}" class="px-6 py-3 text-[10px] tracking-widest border transition-all duration-300 cursor-pointer border-luxury-charcoal/20 text-luxury-charcoal hover:border-luxury-gold peer-checked:border-luxury-charcoal peer-checked:bg-luxury-charcoal peer-checked:text-white">{{ $variant->name ?? 'Variant' }}</label>
+                                    <label for="{{ $variantId }}" class="px-6 py-3 text-[10px] tracking-widest border transition-all duration-300 cursor-pointer border-luxury-charcoal/20 text-luxury-charcoal hover:border-luxury-gold peer-checked:border-luxury-charcoal peer-checked:bg-luxury-charcoal peer-checked:text-white">{{ $variant->name ?? 'Variant' }} ({{ (int) $variant->stock }})</label>
                                 </div>
                             @empty
                                 <p class="text-xs text-luxury-charcoal/50">No variants available.</p>

@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['order_id', 'product_variant_id', 'quantity', 'price'])]
+#[Fillable([
+    'order_id',
+    'product_variant_id',
+    'product_name',
+    'variant_name',
+    'quantity',
+    'unit_price',
+    'subtotal',
+])]
 class OrderItem extends Model
 {
     use HasFactory;
@@ -17,7 +25,8 @@ class OrderItem extends Model
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
+            'unit_price' => 'decimal:2',
+            'subtotal' => 'decimal:2',
         ];
     }
 

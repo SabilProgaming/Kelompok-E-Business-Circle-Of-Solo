@@ -26,7 +26,7 @@ class OrderController extends Controller
         $query = Order::query()
             ->with([
                 'user:id,name,email,phone,address',
-                'items:id,order_id,product_variant_id,quantity,price',
+                'items:id,order_id,product_variant_id,product_name,variant_name,quantity,unit_price,subtotal',
                 'items.productVariant:id,product_id,name,price,stock',
                 'items.productVariant.product:id,name',
             ])

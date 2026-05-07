@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('order_number')->unique()->after('id')->nullable();
-            $table->string('recipient_name')->nullable();
+            // $table->string('order_number')->unique()->after('id')->nullable();
+            // $table->string('recipient_name')->nullable();
             $table->string('phone')->nullable();
-            $table->text('shipping_address')->nullable();
+            // $table->text('shipping_address')->nullable();
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
-            $table->string('payment_method')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            // $table->string('payment_method')->nullable();
+            // $table->timestamp('updated_at')->nullable();
         });
     }
 
