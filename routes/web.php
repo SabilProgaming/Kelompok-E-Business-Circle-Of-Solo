@@ -19,6 +19,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MidtransCallbackController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,8 @@ Route::get('/persona-quiz', [PersonaQuizController::class, 'index'])->name('pers
 Route::post('/persona-quiz/calculate', [PersonaQuizController::class, 'calculate'])->name('persona.calculate');
 
 Route::get('/compare', [ComparisonController::class, 'index'])->name('compare.index');
+
+Route::post('/payments/midtrans/notify', [MidtransCallbackController::class, 'handle'])->name('midtrans.notify');
 
 Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -82,8 +85,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     // Checkout Routes
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout/pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
     Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
     
     // User Dashboard Routes

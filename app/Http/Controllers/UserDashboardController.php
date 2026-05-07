@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -13,6 +12,7 @@ class UserDashboardController extends Controller
         $user = Auth::user();
         $orders = Order::with(['items.productVariant.product.images'])
             ->where('user_id', $user->id)
+            ->whereIn('status', ['paid', 'processing', 'shipped', 'completed'])
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -10,7 +10,7 @@
             <h1 class="text-4xl font-serif font-light mt-2">Complete Your <span class="italic">Order</span></h1>
         </div>
 
-        <form method="POST" action="{{ route('checkout.process') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <form id="checkout-form" method="POST" action="{{ route('checkout.pay') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             @csrf
             
             {{-- Form Kiri --}}
@@ -44,24 +44,13 @@
                     </div>
                 </div>
 
-                {{-- Payment Method --}}
+                <input type="hidden" name="payment_method" value="midtrans">
+
                 <div class="bg-white p-8 md:p-12 border border-luxury-gold/10">
-                    <h2 class="text-xl font-serif italic mb-8 border-b border-luxury-gold/10 pb-4">Payment Method</h2>
-                    
-                    <div class="space-y-4">
-                        <label class="flex items-center p-4 border border-luxury-charcoal/10 cursor-pointer hover:border-luxury-gold transition-colors">
-                            <input type="radio" name="payment_method" value="bank_transfer" required class="text-luxury-gold focus:ring-luxury-gold mr-4">
-                            <span class="text-sm font-medium tracking-wide">Bank Transfer (BCA/Mandiri/BNI)</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-luxury-charcoal/10 cursor-pointer hover:border-luxury-gold transition-colors">
-                            <input type="radio" name="payment_method" value="credit_card" required class="text-luxury-gold focus:ring-luxury-gold mr-4">
-                            <span class="text-sm font-medium tracking-wide">Credit Card</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-luxury-charcoal/10 cursor-pointer hover:border-luxury-gold transition-colors">
-                            <input type="radio" name="payment_method" value="ewallet" required class="text-luxury-gold focus:ring-luxury-gold mr-4">
-                            <span class="text-sm font-medium tracking-wide">E-Wallet (GoPay/OVO/Dana)</span>
-                        </label>
-                    </div>
+                    <h2 class="text-xl font-serif italic mb-6 border-b border-luxury-gold/10 pb-4">Payment Method</h2>
+                    <p class="text-sm text-luxury-charcoal/60 leading-relaxed">
+                        You will choose your payment method securely on the next step using Midtrans. All supported options like bank transfer, e-wallets, and QRIS will appear in the Midtrans popup.
+                    </p>
                 </div>
             </div>
 
@@ -103,9 +92,10 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-10 py-5 bg-luxury-gold hover:bg-white hover:text-luxury-charcoal transition-colors duration-500 text-[10px] uppercase tracking-[0.3em] font-bold text-white">
-                        Place Order
+                    <button type="button" id="pay-button" class="w-full mt-10 py-5 bg-luxury-gold hover:bg-white hover:text-luxury-charcoal transition-colors duration-500 text-[10px] uppercase tracking-[0.3em] font-bold text-white">
+                        Pay Now
                     </button>
+                    <p id="payment-error" class="text-xs text-red-500 mt-4 hidden">Payment failed. Please try again.</p>
                     
                     <p class="text-[9px] text-center text-white/40 mt-6 leading-relaxed">
                         By placing your order, you agree to our Terms of Service and Privacy Policy. Secure payment processing provided by Sanctum.
@@ -116,3 +106,68 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+    const checkoutForm = document.getElementById('checkout-form');
+    const payButton = document.getElementById('pay-button');
+    const paymentError = document.getElementById('payment-error');
+
+    if (checkoutForm && payButton) {
+        payButton.addEventListener('click', async () => {
+            payButton.disabled = true;
+            paymentError?.classList.add('hidden');
+
+            try {
+                const formData = new FormData(checkoutForm);
+                const response = await fetch(checkoutForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to start payment');
+                }
+
+                const data = await response.json();
+
+                if (!data.snapToken || !data.order_number) {
+                    throw new Error('Missing payment token');
+                }
+
+                window.snap.pay(data.snapToken, {
+                    onSuccess: function () {
+                        window.location.href = "{{ route('checkout.success', '__ORDER__') }}".replace('__ORDER__', data.order_number);
+                    },
+                    onPending: function () {
+                        window.location.href = "{{ route('checkout.success', '__ORDER__') }}".replace('__ORDER__', data.order_number);
+                    },
+                    onError: function () {
+                        if (paymentError) {
+                            paymentError.classList.remove('hidden');
+                        }
+                    },
+                    onClose: function () {
+                        if (paymentError) {
+                            paymentError.textContent = 'Payment popup closed. You can retry anytime.';
+                            paymentError.classList.remove('hidden');
+                        }
+                    }
+                });
+            } catch (error) {
+                if (paymentError) {
+                    paymentError.textContent = 'Payment initialization failed. Please check your details.';
+                    paymentError.classList.remove('hidden');
+                }
+            } finally {
+                payButton.disabled = false;
+            }
+        });
+    }
+</script>
+@endpush

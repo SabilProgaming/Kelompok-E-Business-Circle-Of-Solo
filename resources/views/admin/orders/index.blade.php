@@ -19,10 +19,10 @@
 				'items' => $order->items->map(function ($item) {
 					return [
 						'id' => $item->id,
-						'product_name' => $item->productVariant?->product?->name ?? 'Unknown',
-						'variant_name' => $item->productVariant?->name ?? '-',
+						'product_name' => $item->product_name ?? $item->productVariant?->product?->name ?? 'Unknown',
+						'variant_name' => $item->variant_name ?? $item->productVariant?->name ?? '-',
 						'quantity' => $item->quantity,
-						'price' => (float) $item->price,
+						'price' => (float) ($item->unit_price ?? 0),
 					];
 				})->values()->toArray(),
 			]];
@@ -165,7 +165,7 @@
 									<td class="px-4 py-3 font-medium text-gray-900" x-text="item.product_name"></td>
 									<td class="px-4 py-3 text-gray-600" x-text="item.variant_name"></td>
 									<td class="px-4 py-3 text-right" x-text="item.quantity"></td>
-									<td class="px-4 py-3 text-right" x-text="formatCurrency(item.price)"></td>
+										<td class="px-4 py-3 text-right" x-text="formatCurrency(item.price)"></td>
 								</tr>
 							</template>
 							</tbody>

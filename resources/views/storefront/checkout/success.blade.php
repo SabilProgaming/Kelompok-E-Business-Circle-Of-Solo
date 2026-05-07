@@ -42,10 +42,10 @@
                 @foreach($order->items as $item)
                 <div class="flex justify-between items-center py-2">
                     <div class="flex items-center gap-4">
-                        <span class="text-sm font-serif">{{ $item->productVariant->product->name }}</span>
-                        <span class="text-[10px] text-luxury-charcoal/40 uppercase tracking-widest">{{ $item->productVariant->name }} x{{ $item->quantity }}</span>
+                        <span class="text-sm font-serif">{{ $item->product_name ?? $item->productVariant?->product?->name }}</span>
+                        <span class="text-[10px] text-luxury-charcoal/40 uppercase tracking-widest">{{ $item->variant_name ?? $item->productVariant?->name }} x{{ $item->quantity }}</span>
                     </div>
-                    <span class="font-mono text-xs text-luxury-charcoal/70">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</span>
+                    <span class="font-mono text-xs text-luxury-charcoal/70">Rp {{ number_format($item->subtotal ?? ($item->unit_price * $item->quantity), 0, ',', '.') }}</span>
                 </div>
                 @endforeach
             </div>
