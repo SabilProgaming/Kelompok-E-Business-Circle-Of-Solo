@@ -167,7 +167,9 @@ class CheckoutController extends Controller
         }
 
         if (! $order) {
-            abort(404);
+            return view('storefront.checkout.pending', [
+                'orderNumber' => $order_number,
+            ]);
         }
 
         if ($order->status !== 'paid') {
@@ -186,5 +188,32 @@ class CheckoutController extends Controller
         }
 
         return view('storefront.checkout.success', compact('order'));
+    }
+
+    public function confirm(Request $request)
+    {
+        $orderNumber = (string) $request->input('order_id', '');
+
+        if ($orderNumber === '') {
+            return response()->json(['message' => 'Missing order_id'], 422);
+        }
+
+        MidtransConfig::$serverKey = config('midtrans.server_key');
+        MidtransConfig::$isProduction = (bool) config('midtrans.is_production');
+        MidtransConfig::$isSanitized = (bool) config('midtrans.sanitize');
+        MidtransConfig::$is3ds = (bool) config('midtrans.enable_3ds');
+
+        try {
+            $status = Transaction::status($orderNumber);
+            $payload = json_decode(json_encode($status), true) ?? [];
+            (new MidtransPaymentService())->handleNotification($payload);
+        } catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to confirm payment',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
+        return response()->json(['status' => 'ok']);
     }
 }
