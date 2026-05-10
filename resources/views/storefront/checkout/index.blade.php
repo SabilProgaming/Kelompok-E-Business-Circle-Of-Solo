@@ -140,12 +140,43 @@
                     throw new Error('Missing payment token');
                 }
 
+                const redirectToSuccess = () => {
+                    window.location.href = "{{ route('checkout.success', '__ORDER__') }}".replace('__ORDER__', data.order_number);
+                };
+
+                const confirmPayment = async () => {
+                    const response = await fetch("{{ route('checkout.confirm') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ order_id: data.order_number })
+                    });
+
+                    const payload = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        const message = payload?.message || 'Payment confirmation failed.';
+                        if (paymentError) {
+                            paymentError.textContent = message;
+                            paymentError.classList.remove('hidden');
+                        }
+                        console.error('checkout.confirm error:', payload);
+                        throw new Error(message);
+                    }
+
+                    console.info('checkout.confirm success:', payload);
+                };
+
                 window.snap.pay(data.snapToken, {
-                    onSuccess: function () {
-                        window.location.href = "{{ route('checkout.success', '__ORDER__') }}".replace('__ORDER__', data.order_number);
+                    onSuccess: async function () {
+                        await confirmPayment();
+                        redirectToSuccess();
                     },
-                    onPending: function () {
-                        window.location.href = "{{ route('checkout.success', '__ORDER__') }}".replace('__ORDER__', data.order_number);
+                    onPending: async function () {
+                        await confirmPayment();
+                        redirectToSuccess();
                     },
                     onError: function () {
                         if (paymentError) {
