@@ -110,7 +110,7 @@ body.dark-theme * {
     display: block;
     width: 100%;
     border: none;
-    border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+    border-bottom: 1px solid rgba(26, 26, 26, 0.08);
     outline: none;
     box-shadow: none;
     background: transparent;

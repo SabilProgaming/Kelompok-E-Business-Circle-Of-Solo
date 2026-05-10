@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Services\AiRecommendationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AiChatController extends Controller
 {
+    public function index(): View
+    {
+        return view('storefront.ai.index');
+    }
+
     public function chat(Request $request, AiRecommendationService $service): JsonResponse
     {
         $request->validate([

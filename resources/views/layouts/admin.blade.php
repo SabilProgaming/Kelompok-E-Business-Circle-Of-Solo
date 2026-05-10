@@ -46,6 +46,7 @@
             ['icon' => 'credit-card', 'label' => 'Payments', 'route' => 'admin.payments.index', 'active' => 'admin.payments.*'],
             ['icon' => 'truck', 'label' => 'Shipping', 'route' => 'admin.shipping-methods.index', 'active' => 'admin.shipping-methods.*'],
             ['icon' => 'bar-chart-3', 'label' => 'Reports', 'route' => 'admin.reports.index', 'active' => 'admin.reports.*'],
+            ['icon' => 'mail', 'label' => 'Messages', 'route' => 'admin.contact-messages.index', 'active' => 'admin.contact-messages.*'],
         ];
         $user = auth()->user();
         $initials = $user ? strtoupper(substr($user->name, 0, 2)) : 'AU';

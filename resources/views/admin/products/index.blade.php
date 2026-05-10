@@ -310,17 +310,20 @@
 									<template x-if="selectedScentIds.length > 0">
 										<div class="flex flex-wrap gap-2 mb-3">
 											<template x-for="scentId in selectedScentIds" :key="`chip-${scentId}`">
-												<button type="button" class="inline-flex items-center gap-2 px-3 py-1 text-[9px] uppercase tracking-widest bg-[#0F0F0F] text-white" @click="toggleScent(scentId)">
-													<span x-text="scentNameById(scentId)"></span>
-													<span class="text-[10px]">×</span>
-												</button>
+                                                <div>
+                                                    <input type="hidden" name="scent_ids[]" :value="scentId" />
+                                                    <button type="button" class="inline-flex items-center gap-2 px-3 py-1 text-[9px] uppercase tracking-widest bg-[#0F0F0F] text-white" @click="toggleScent(scentId)">
+                                                        <span x-text="scentNameById(scentId)"></span>
+                                                        <span class="text-[10px]">×</span>
+                                                    </button>
+                                                </div>
 											</template>
 										</div>
 									</template>
 									<div class="max-h-48 overflow-y-auto border border-gray-200 bg-white">
 										<template x-for="scent in filteredScents()" :key="`scent-${scent.id}`">
 											<label class="flex items-center gap-3 px-3 py-2 border-b border-gray-100 text-[10px] uppercase tracking-widest cursor-pointer hover:bg-gray-50">
-												<input type="checkbox" name="scent_ids[]" :value="scent.id" x-model="selectedScentIds" class="w-3.5 h-3.5" />
+												<input type="checkbox" :value="scent.id" x-model="selectedScentIds" class="w-3.5 h-3.5" />
 												<span x-text="scent.name"></span>
 											</label>
 										</template>

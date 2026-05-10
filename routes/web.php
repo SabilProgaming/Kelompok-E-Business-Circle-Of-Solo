@@ -10,9 +10,11 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScentController;
 use App\Http\Controllers\Admin\ShippingMethodController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PersonaQuizController;
 use App\Http\Controllers\ReviewController;
@@ -20,10 +22,12 @@ use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MidtransCallbackController;
+use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/ai/chat', [AiChatController::class, 'chat'])->name('ai.chat');
+Route::get('/ai-concierge', [AiChatController::class, 'index'])->name('ai.index');
 
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
 Route::get('/products', [StorefrontController::class, 'catalog'])->name('products.index');
@@ -39,6 +43,13 @@ Route::post('/persona-quiz/calculate', [PersonaQuizController::class, 'calculate
 Route::get('/compare', [ComparisonController::class, 'index'])->name('compare.index');
 
 Route::post('/payments/midtrans/notify', [MidtransCallbackController::class, 'handle'])->name('midtrans.notify');
+
+// Shipping API (Komerce/Komship)
+Route::get('/api/shipping/search-destination', [ShippingController::class, 'searchDestination'])->name('shipping.search');
+Route::post('/api/shipping/calculate', [ShippingController::class, 'calculateCost'])->name('shipping.calculate');
+
+// Contact Form
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -69,6 +80,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+
+        Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
+        Route::get('/contact-messages/{contactMessage}', [ContactMessageController::class, 'show'])->name('contact-messages.show');
+        Route::delete('/contact-messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
     });
 });
 
@@ -92,6 +107,7 @@ Route::middleware('auth')->group(function () {
     
     // User Dashboard Routes
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/user/orders/{order}', [UserDashboardController::class, 'show'])->name('user.orders.show');
 });
 
 require __DIR__.'/auth.php';

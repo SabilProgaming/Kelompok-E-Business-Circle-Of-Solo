@@ -12,9 +12,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    @stack('head')
 
     {{-- Apply dark theme immediately to prevent flash --}}
     <script>
@@ -61,6 +63,7 @@
             ['name' => 'Collections', 'route' => 'products.index', 'active' => fn () => request()->routeIs('products.*')],
             ['name' => 'Compare', 'route' => 'compare.index', 'active' => fn () => request()->routeIs('compare.*')],
             ['name' => 'Persona Quiz', 'route' => 'persona.index', 'active' => fn () => request()->routeIs('persona.*')],
+            ['name' => 'AI Concierge', 'route' => 'ai.index', 'active' => fn () => request()->routeIs('ai.index')],
             ['name' => 'About', 'route' => 'about', 'active' => fn () => request()->routeIs('about')],
             ['name' => 'Contact', 'route' => 'contact', 'active' => fn () => request()->routeIs('contact')],
         ];
@@ -113,20 +116,52 @@
             <div class="w-px h-4 bg-luxury-charcoal/20"></div>
 
             @auth
-                @if($dashboardRoute)
-                    <a href="{{ $dashboardRoute }}" class="text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap">
-                        Admin
-                    </a>
-                @endif
-                <a href="{{ route('user.dashboard') }}" class="text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap">
-                    My Orders
-                </a>
-                <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
-                    @csrf
-                    <button type="submit" class="inline-flex items-center text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap leading-none">
-                        Logout
+                <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                    <button @click="open = !open" class="flex items-center gap-2 hover:text-luxury-gold transition-colors group">
+                        <div class="w-8 h-8 rounded-full border border-luxury-charcoal/20 flex items-center justify-center bg-luxury-cream group-hover:border-luxury-gold transition-colors">
+                            <i data-lucide="user" class="w-4 h-4 text-luxury-charcoal group-hover:text-luxury-gold transition-colors" style="stroke-width:1.5"></i>
+                        </div>
                     </button>
-                </form>
+                    
+                    <div x-show="open" x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 translate-y-2"
+                         class="absolute right-0 mt-4 w-48 bg-white border border-luxury-gold/10 shadow-2xl py-2 z-50">
+                        
+                        <div class="px-4 py-3 border-b border-luxury-charcoal/5 mb-2">
+                            <p class="text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/40 mb-1">Signed in as</p>
+                            <p class="text-xs font-bold text-luxury-charcoal truncate">{{ auth()->user()->name }}</p>
+                        </div>
+
+                        @if($dashboardRoute)
+                            <a href="{{ $dashboardRoute }}" class="block px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/70 hover:text-luxury-gold hover:bg-luxury-cream transition-colors">
+                                Admin Dashboard
+                            </a>
+                        @endif
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/70 hover:text-luxury-gold hover:bg-luxury-cream transition-colors">
+                            My Profile
+                        </a>
+                        <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/70 hover:text-luxury-gold hover:bg-luxury-cream transition-colors">
+                            My Orders
+                        </a>
+                        <a href="{{ route('wishlist.index') }}" class="block px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/70 hover:text-luxury-gold hover:bg-luxury-cream transition-colors">
+                            Wishlist
+                        </a>
+                        
+                        <div class="border-t border-luxury-charcoal/5 mt-2 pt-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-red-500 hover:bg-red-50 transition-colors">
+                                    Sign Out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}" class="text-[9px] uppercase tracking-[0.22em] font-semibold text-luxury-charcoal/70 hover:text-luxury-gold transition-colors whitespace-nowrap">
                     Sign In
@@ -222,5 +257,6 @@
 </script>
 
 @stack('scripts')
+    @stack('scripts')
 </body>
 </html>

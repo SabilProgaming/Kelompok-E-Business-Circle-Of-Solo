@@ -45,7 +45,7 @@
                 quantity: 1,
                 isWishlisted: {{ $isWishlisted ? 'true' : 'false' }},
                 wishLoading: false,
-                get selectedVariant() { return this.variants.find(v => v.id === this.selectedVariantId); },
+                get selectedVariant() { return this.variants.find(v => v.id == this.selectedVariantId); },
                 get formattedPrice() { return this.selectedVariant ? Number(this.selectedVariant.price).toLocaleString('id-ID') : '0'; },
                 get formattedStock() { return this.selectedVariant ? this.selectedVariant.stock : 0; },
                 async toggleWishlist() {
@@ -62,6 +62,11 @@
                         this.isWishlisted = data.status === 'added';
                     } catch(e) { console.error(e); }
                     finally { this.wishLoading = false; }
+                },
+                init() {
+                    this.$watch('selectedVariantId', () => {
+                        this.quantity = 1;
+                    });
                 }
             }">
                 <a href="{{ route('products.index') }}" class="text-[10px] uppercase tracking-widest text-luxury-gold flex items-center group transition-colors hover:text-luxury-charcoal">
@@ -122,11 +127,16 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
                         <div class="flex items-center border border-luxury-charcoal/10 bg-white">
                             <button class="p-4 hover:bg-luxury-gold hover:text-white transition-colors" type="button" @click="quantity = Math.max(1, quantity - 1)">-</button>
-                            <span class="w-12 text-center text-xs font-mono font-bold tracking-widest" x-text="quantity"></span>
-                            <button class="p-4 hover:bg-luxury-gold hover:text-white transition-colors" type="button" @click="quantity = quantity + 1">+</button>
+                            <input type="number" 
+                                   class="w-16 text-center text-xs font-mono font-bold tracking-widest bg-transparent border-none focus:ring-0 p-0 m-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                   x-model.number="quantity" 
+                                   @blur="quantity = Math.max(1, Math.min(quantity || 1, selectedVariant ? selectedVariant.stock : 1))">
+                            <button class="p-4 hover:bg-luxury-gold hover:text-white transition-colors" type="button" @click="if(selectedVariant && quantity < selectedVariant.stock) quantity++">+</button>
                         </div>
                         <input type="hidden" name="quantity" :value="quantity">
-                        <button class="flex-1 py-4 sm:py-6 px-4 border border-luxury-charcoal bg-luxury-charcoal text-white text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-luxury-gold hover:border-luxury-gold transition-all duration-500 shadow-xl" @disabled($variants->isEmpty())>Add to Shopping Bag</button>
+                        <button class="flex-1 py-4 sm:py-6 px-4 border border-luxury-charcoal bg-luxury-charcoal text-white text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-luxury-gold hover:border-luxury-gold transition-all duration-500 shadow-xl" :disabled="!selectedVariant || selectedVariant.stock === 0" :class="(!selectedVariant || selectedVariant.stock === 0) ? 'opacity-50 cursor-not-allowed hover:bg-luxury-charcoal hover:border-luxury-charcoal' : ''">
+                            <span x-text="(!selectedVariant || selectedVariant.stock === 0) ? 'Out of Stock' : 'Add to Shopping Bag'"></span>
+                        </button>
                         <button type="button" @click="toggleWishlist()" class="p-4 border transition-all duration-300" :class="isWishlisted ? 'border-red-400 bg-red-50 text-red-500' : 'border-luxury-charcoal/10 text-luxury-charcoal/40 hover:text-red-500 hover:border-red-300'">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" :fill="isWishlisted ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
                         </button>

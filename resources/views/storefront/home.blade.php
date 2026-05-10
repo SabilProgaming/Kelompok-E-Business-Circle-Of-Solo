@@ -4,9 +4,15 @@
 
 @section('content')
 <div class="pt-20">
-    <section class="h-screen flex items-center bg-luxury-cream relative overflow-hidden">
-        <div class="absolute inset-0 bg-luxury-cream opacity-50 z-0"></div>
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-luxury-clay/20 -skew-x-12 transform translate-x-1/2 z-0"></div>
+    <section class="h-screen flex items-center relative overflow-hidden bg-black">
+        {{-- Cinematic Background Image --}}
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('images/home-hero-bg.png') }}" alt="Sanctum Essence" class="w-full h-full object-cover opacity-80">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-luxury-cream via-transparent to-transparent opacity-20"></div>
+        </div>
+
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-luxury-gold/5 -skew-x-12 transform translate-x-1/2 z-0 blur-3xl"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 h-full w-full relative z-10">
             <div class="flex flex-col justify-center px-6 md:px-32 space-y-12">
@@ -15,17 +21,17 @@
                         <span class="h-px w-12 bg-luxury-gold"></span>
                         <p class="text-luxury-gold text-[9px] font-bold tracking-[0.5em] uppercase">Ethereal Fragrances</p>
                     </div>
-                    <h1 class="text-6xl md:text-9xl font-serif leading-[1] font-light text-luxury-charcoal">
+                    <h1 class="text-6xl md:text-9xl font-serif leading-[1] font-light text-white drop-shadow-lg">
                         Essence of <br />
-                        <span class="italic block pl-20 mt-2">Purity</span>
+                        <span class="italic block pl-20 mt-2 text-luxury-cream">Purity</span>
                     </h1>
-                    <p class="text-sm text-luxury-charcoal/40 max-w-sm leading-relaxed font-light tracking-wide">
+                    <p class="text-sm text-luxury-cream/70 max-w-sm leading-relaxed font-light tracking-wide drop-shadow">
                         A masterfully curated sanctuary where rare botanical essences meet modern sophistication. Discover scents that linger as memories.
                     </p>
                 </div>
 
                 <div>
-                    <a href="{{ route('products.index') }}" class="luxury-button inline-block group rounded-full">
+                    <a href="{{ route('products.index') }}" class="luxury-button inline-block group rounded-full border border-luxury-gold/50 hover:border-luxury-gold">
                         Explore The Gallery
                     </a>
                 </div>

@@ -53,9 +53,15 @@ class CartController extends Controller
             ->where('product_variant_id', $variant->id)
             ->first();
 
+        $newQuantity = $item ? $item->quantity + $data['quantity'] : $data['quantity'];
+
+        if ($newQuantity > $variant->stock) {
+            return back()->with('error', 'Kuantitas melebihi stok yang tersedia (' . $variant->stock . ' tersisa).');
+        }
+
         if ($item) {
             $item->update([
-                'quantity' => $item->quantity + $data['quantity'],
+                'quantity' => $newQuantity,
             ]);
         } else {
             $cart->items()->create([
@@ -75,6 +81,10 @@ class CartController extends Controller
 
         if ($cartItem->cart?->user_id !== $request->user()->id) {
             abort(403);
+        }
+
+        if ($data['quantity'] > $cartItem->productVariant->stock) {
+            return back()->with('error', 'Kuantitas melebihi stok yang tersedia (' . $cartItem->productVariant->stock . ' tersisa).');
         }
 
         $cartItem->update([

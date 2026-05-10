@@ -28,9 +28,6 @@
                 <a href="{{ route('wishlist.index') }}" class="block px-6 py-4 bg-white/50 text-luxury-charcoal text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-colors border-l-2 border-transparent hover:border-luxury-gold/50">
                     My Wishlist
                 </a>
-                <a href="{{ route('profile.edit') }}" class="block px-6 py-4 bg-white/50 text-luxury-charcoal text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white transition-colors border-l-2 border-transparent hover:border-luxury-gold/50">
-                    Account Settings
-                </a>
             </div>
 
             {{-- Main Content --}}
@@ -53,10 +50,28 @@
                             <p class="font-mono font-bold text-luxury-gold">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                         </div>
                         <div>
-                            <span class="px-4 py-1.5 text-[9px] uppercase tracking-[0.2em] font-bold rounded-full 
-                                {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 
-                                  ($order->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-luxury-charcoal/10 text-luxury-charcoal') }}">
-                                {{ $order->status }}
+                            @php
+                                $statusColors = [
+                                    'pending' => 'bg-yellow-100 text-yellow-700 border border-yellow-200',
+                                    'paid' => 'bg-emerald-50 text-emerald-600 border border-emerald-200',
+                                    'processing' => 'bg-blue-50 text-blue-600 border border-blue-200',
+                                    'shipped' => 'bg-indigo-50 text-indigo-600 border border-indigo-200',
+                                    'completed' => 'bg-green-100 text-green-700 border border-green-200',
+                                    'cancelled' => 'bg-red-50 text-red-600 border border-red-200',
+                                ];
+                                $statusLabels = [
+                                    'pending' => 'Awaiting Payment',
+                                    'paid' => 'Payment Received',
+                                    'processing' => 'Being Prepared',
+                                    'shipped' => 'In Transit',
+                                    'completed' => 'Delivered',
+                                    'cancelled' => 'Cancelled',
+                                ];
+                                $colorClass = $statusColors[$order->status] ?? 'bg-luxury-charcoal/10 text-luxury-charcoal';
+                                $label = $statusLabels[$order->status] ?? ucfirst($order->status);
+                            @endphp
+                            <span class="px-4 py-1.5 text-[9px] uppercase tracking-[0.2em] font-bold rounded-full {{ $colorClass }}">
+                                {{ $label }}
                             </span>
                         </div>
                     </div>
@@ -79,6 +94,13 @@
                             </div>
                         </div>
                         @endforeach
+                    </div>
+                    
+                    <div class="px-6 md:px-8 py-4 bg-luxury-cream/50 border-t border-luxury-charcoal/5 flex justify-end">
+                        <a href="{{ route('user.orders.show', $order) }}" class="text-[9px] uppercase tracking-[0.2em] font-bold text-luxury-gold hover:text-luxury-charcoal transition-colors inline-flex items-center gap-2">
+                            View Details
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                        </a>
                     </div>
                 </div>
                 @empty

@@ -30,11 +30,7 @@ class CheckoutController extends Controller
             return $item->quantity * $item->productVariant->price;
         });
 
-        // Fixed shipping cost for simplicity
-        $shippingCost = 50000;
-        $total = $subtotal + $shippingCost;
-
-        return view('storefront.checkout.index', compact('cartItems', 'subtotal', 'shippingCost', 'total'));
+        return view('storefront.checkout.index', compact('cartItems', 'subtotal'));
     }
 
     public function pay(Request $request)
@@ -43,8 +39,10 @@ class CheckoutController extends Controller
             'recipient_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'shipping_address' => 'required|string',
-            'city' => 'required|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'city_name' => 'nullable|string|max:255',
             'postal_code' => 'required|string|max:20',
+            'shipping_cost' => 'required|numeric|min:0',
         ]);
 
         $user = Auth::user();
@@ -58,8 +56,10 @@ class CheckoutController extends Controller
         $subtotal = $cartItems->sum(function($item) {
             return $item->quantity * $item->productVariant->price;
         });
-        $shippingCost = 50000;
+        $shippingCost = (int) $request->input('shipping_cost', 50000);
         $total = $subtotal + $shippingCost;
+
+        $cityName = $request->input('city_name') ?: $request->input('city', '');
 
         $orderNumber = 'ORD-SNC-' . strtoupper(Str::random(8));
         $snapshotItems = $cartItems->map(function ($item) {
@@ -79,7 +79,7 @@ class CheckoutController extends Controller
             'recipient_name' => $request->recipient_name,
             'phone' => $request->phone,
             'shipping_address' => $request->shipping_address,
-            'city' => $request->city,
+            'city' => $cityName,
             'postal_code' => $request->postal_code,
             'cart_snapshot' => $snapshotItems,
             'subtotal' => $subtotal,
@@ -92,6 +92,13 @@ class CheckoutController extends Controller
         MidtransConfig::$isProduction = (bool) config('midtrans.is_production');
         MidtransConfig::$isSanitized = (bool) config('midtrans.sanitize');
         MidtransConfig::$is3ds = (bool) config('midtrans.enable_3ds');
+        
+        // Fix for CURL SSL Error locally
+        MidtransConfig::$curlOptions = [
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTPHEADER => [],
+        ];
 
         $itemDetails = $cartItems->map(function ($item) {
             return [
@@ -153,6 +160,7 @@ class CheckoutController extends Controller
             MidtransConfig::$isProduction = (bool) config('midtrans.is_production');
             MidtransConfig::$isSanitized = (bool) config('midtrans.sanitize');
             MidtransConfig::$is3ds = (bool) config('midtrans.enable_3ds');
+            MidtransConfig::$curlOptions = [CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_HTTPHEADER => []];
 
             try {
                 $status = Transaction::status($order_number);
@@ -177,6 +185,7 @@ class CheckoutController extends Controller
             MidtransConfig::$isProduction = (bool) config('midtrans.is_production');
             MidtransConfig::$isSanitized = (bool) config('midtrans.sanitize');
             MidtransConfig::$is3ds = (bool) config('midtrans.enable_3ds');
+            MidtransConfig::$curlOptions = [CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_HTTPHEADER => []];
 
             try {
                 $status = Transaction::status($order->order_number);
@@ -202,6 +211,7 @@ class CheckoutController extends Controller
         MidtransConfig::$isProduction = (bool) config('midtrans.is_production');
         MidtransConfig::$isSanitized = (bool) config('midtrans.sanitize');
         MidtransConfig::$is3ds = (bool) config('midtrans.enable_3ds');
+        MidtransConfig::$curlOptions = [CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_HTTPHEADER => []];
 
         try {
             $status = Transaction::status($orderNumber);
