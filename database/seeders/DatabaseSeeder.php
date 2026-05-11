@@ -32,5 +32,9 @@ class DatabaseSeeder extends Seeder
             'phone' => '08123456789',
             'address' => 'Solo',
         ]);
+
+        $this->call([
+            ProductSeeder::class,
+        ]);
     }
 }

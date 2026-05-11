@@ -33,6 +33,9 @@ class ShippingController extends Controller
             ['id' => '10', 'label' => 'Surakarta (Solo), Jawa Tengah', 'postal_code' => '57111'],
             ['id' => '11', 'label' => 'Yogyakarta, DI Yogyakarta', 'postal_code' => '55111'],
             ['id' => '12', 'label' => 'Malang, Jawa Timur', 'postal_code' => '65111'],
+            ['id' => '13', 'label' => 'Palembang, Sumatera Selatan', 'postal_code' => '30111'],
+            ['id' => '14', 'label' => 'Baturaja, Sumatera Selatan', 'postal_code' => '32111'],
+            ['id' => '15', 'label' => 'Prabumulih, Sumatera Selatan', 'postal_code' => '31111'],
         ];
 
         $results = array_filter($cities, function ($city) use ($keyword) {
