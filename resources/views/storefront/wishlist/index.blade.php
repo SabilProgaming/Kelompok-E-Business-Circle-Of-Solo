@@ -21,7 +21,7 @@
                 @endphp
                 <div class="group" x-data="{ removed: false }" x-show="!removed" x-transition>
                     <a href="{{ route('products.show', $product) }}" class="block">
-                        <div class="relative aspect-[4/5] bg-white flex items-center justify-center p-8 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] transition-all duration-700 border border-luxury-gold/5 group-hover:border-luxury-gold/20 group-hover:-translate-y-2">
+                        <div class="relative aspect-[4/5] rounded-2xl bg-white flex items-center justify-center p-8 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] transition-all duration-700 border border-luxury-gold/5 group-hover:border-luxury-gold/20 group-hover:-translate-y-2">
                             @if($displayImage)
                                 <img src="{{ $displayImage }}" alt="{{ $product->name }}" class="w-full h-full object-cover z-10" />
                             @else

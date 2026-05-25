@@ -3,15 +3,25 @@
 @section('title', "Collections - Sanctum")
 
 @section('content')
-<div class="pt-48 pb-40 px-6 md:px-24 max-w-[1800px] mx-auto animate-fade-in relative">
-    <div class="absolute top-40 right-0 w-1/4 h-screen bg-luxury-gold/5 -z-10 blur-3xl opacity-30"></div>
+<div class="animate-fade-in relative">
+    {{-- Hero Section --}}
+    <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('images/collections-hero.png') }}" alt="Sanctum Collections" class="w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-b from-luxury-cream/20 via-transparent to-luxury-cream"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-6 mt-16">
+            <span class="text-[10px] uppercase tracking-[0.5em] text-luxury-gold mb-6 block font-bold">Discovery</span>
+            <h1 class="text-5xl md:text-7xl font-serif text-luxury-charcoal mb-8">The <span class="italic">Gallery</span></h1>
+            <div class="w-24 h-px bg-luxury-gold mx-auto"></div>
+        </div>
+    </section>
 
-    <div class="max-w-7xl mx-auto" x-data="{ open: false }">
-        <header class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-luxury-gold/20 pb-12">
-            <div class="space-y-4">
-                <span class="text-luxury-gold text-[9px] font-bold tracking-[0.5em] uppercase">Discovery</span>
-                <h1 class="text-5xl md:text-8xl font-serif font-light">The <span class="italic">Gallery</span></h1>
-            </div>
+    <div class="px-6 md:px-24 max-w-[1800px] mx-auto py-12">
+        <div class="max-w-7xl mx-auto" x-data="{ open: false }">
+            <header class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-luxury-gold/20 pb-12">
+                <div class="hidden md:block"></div>
             @php
                 $activeFiltersCount = count($selectedCategory ?? []) + count($selectedBrand ?? []) + count($selectedScent ?? []);
             @endphp
@@ -130,7 +140,7 @@
                 @foreach ($products as $product)
                     <div class="group cursor-pointer">
                         <a href="{{ route('products.show', $product) }}" class="block">
-                            <div class="relative aspect-[4/5] bg-white flex items-center justify-center transition-all duration-700 group-hover:bg-luxury-cream p-10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] group-hover:-translate-y-2 border border-luxury-gold/5 group-hover:border-luxury-gold/20">
+                            <div class="relative aspect-[4/5] bg-white rounded-2xl flex items-center justify-center transition-all duration-700 group-hover:bg-luxury-cream p-10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] group-hover:-translate-y-2 border border-luxury-gold/5 group-hover:border-luxury-gold/20">
                                 <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pattern-dots"></div>
                                 @if ($product->images->isNotEmpty())
                                     @php($imageUrl = $product->images->first()->image_url)
@@ -150,9 +160,9 @@
                             <div class="mt-10 space-y-3 text-center">
                                 <p class="text-[8px] text-luxury-gold font-bold tracking-[0.5em] uppercase">{{ $product->brand->name ?? 'Unknown Brand' }}</p>
                                 <h3 class="font-serif text-2xl font-light group-hover:italic transition-all duration-500 px-4">{{ $product->name }}</h3>
-                                <div class="flex items-center justify-center space-x-3 opacity-30 group-hover:opacity-100 transition-opacity duration-500">
+                                <div class="flex items-center justify-center space-x-3 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                                     <span class="w-6 h-[1px] bg-luxury-gold"></span>
-                                    <p class="text-[9px] text-luxury-charcoal font-medium tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
+                                    <p class="text-xs text-luxury-charcoal font-bold tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
                                     <span class="w-6 h-[1px] bg-luxury-gold"></span>
                                 </div>
                             </div>

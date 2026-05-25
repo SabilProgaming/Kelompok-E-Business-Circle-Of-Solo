@@ -40,7 +40,7 @@
             <div class="relative hidden lg:flex items-center justify-center p-20">
                 <div class="relative w-full max-w-lg aspect-[4/5] z-10">
                     <div class="absolute -inset-10 border border-luxury-gold/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
-                    <div class="absolute inset-0 bg-luxury-cream shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden p-6">
+                    <div class="absolute inset-0 bg-white rounded-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden p-6">
                         <div class="w-full h-full bg-luxury-nude flex items-center justify-center relative group">
                             <img
                                 src="https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&q=80&w=1200"
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute -bottom-10 -left-10 bg-luxury-cream p-8 shadow-2xl z-20 max-w-[240px]">
+                    <div class="absolute -bottom-10 -left-10 bg-white rounded-2xl p-8 shadow-2xl z-20 max-w-[240px]">
                         <p class="text-luxury-gold text-[8px] font-bold tracking-[0.4em] uppercase mb-4">New Arrival</p>
                         <p class="font-serif italic text-xl text-luxury-charcoal leading-tight">Whispering <br /> Amber</p>
                         <div class="h-px w-10 bg-luxury-gold/30 my-4"></div>
@@ -82,7 +82,7 @@
                 @foreach ($products->take(4) as $product)
                     <div class="group">
                         <a href="{{ route('products.show', $product) }}" class="block">
-                            <div class="relative aspect-[4/5] bg-luxury-nude/30 overflow-hidden flex items-center justify-center p-8 group-hover:bg-luxury-clay/20 transition-all duration-700 rounded-sm">
+                            <div class="relative aspect-[4/5] bg-white overflow-hidden flex items-center justify-center p-8 group-hover:bg-white/90 transition-all duration-700 rounded-2xl shadow-[0_8px_30px_-8px_rgba(0,0,0,0.08)]">
                                 <div class="absolute inset-0 border border-luxury-gold/5 m-4"></div>
                                 @if ($product->images->isNotEmpty())
                                     @php($homeImageUrl = $product->images->first()->image_url)
@@ -92,19 +92,19 @@
                                         class="w-full h-full object-cover shadow-[0_30px_60px_-12px_rgba(0,0,0,0.15)] transition-all duration-[1s] group-hover:scale-105 group-hover:-translate-y-2"
                                     />
                                 @else
-                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center text-sm text-gray-500">
+                                    <div class="w-full h-full bg-gray-50 flex items-center justify-center text-sm text-gray-500">
                                         No Image Available
                                     </div>
                                 @endif
 
                                 <div class="absolute bottom-6 left-6 right-6 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex justify-center">
-                                    <span class="text-[8px] uppercase tracking-[0.4em] text-luxury-gold font-bold bg-luxury-cream/80 backdrop-blur-md px-6 py-3 rounded-full border border-luxury-gold/10">View Details</span>
+                                    <span class="text-[8px] uppercase tracking-[0.4em] text-luxury-gold font-bold bg-white/90 backdrop-blur-md px-6 py-3 rounded-full border border-luxury-gold/20 shadow-lg">View Details</span>
                                 </div>
                             </div>
                             <div class="mt-8 text-center space-y-2">
                                 <p class="text-[8px] text-luxury-gold font-bold tracking-[0.4em] uppercase">{{ $product->brand->name ?? 'Unknown Brand' }}</p>
                                 <h3 class="font-serif text-2xl font-light text-luxury-charcoal transition-colors group-hover:text-luxury-gold">{{ $product->name }}</h3>
-                                <p class="text-xs text-luxury-charcoal/30 font-light tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
+                                <p class="text-sm text-luxury-charcoal/80 font-bold tracking-widest">Rp {{ number_format($product->variants->first()->price ?? 0, 0, ',', '.') }}</p>
                             </div>
                         </a>
                     </div>

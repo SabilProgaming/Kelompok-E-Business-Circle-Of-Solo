@@ -13,7 +13,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
             <div class="bg-luxury-nude flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
                 <div class="absolute inset-0 opacity-10 pattern-dots"></div>
-                <div class="w-full max-w-lg aspect-[4/5] bg-luxury-charcoal relative shadow-2xl flex flex-col p-10 items-center justify-center group overflow-hidden">
+                <div class="w-full max-w-lg aspect-[4/5] rounded-2xl bg-luxury-charcoal relative shadow-2xl flex flex-col p-10 items-center justify-center group overflow-hidden">
                     @php
                         $productImageUrl = $product->images->first()?->image_url;
                         $resolvedProductImageUrl = $productImageUrl
@@ -77,7 +77,7 @@
                     <div class="space-y-4">
                         <h1 class="text-5xl md:text-7xl font-serif font-light leading-tight">{{ $product->name }}</h1>
                         <div class="flex items-center space-x-4">
-                            <p class="text-2xl text-luxury-gold font-light font-mono tracking-tighter">Rp <span x-text="formattedPrice"></span></p>
+                            <p class="text-2xl text-luxury-gold font-bold font-mono tracking-tighter">Rp <span x-text="formattedPrice"></span></p>
                             <span class="text-[10px] uppercase tracking-[0.3em] text-luxury-charcoal/30 font-medium">{{ $product->category->name ?? '' }}</span>
                         </div>
                         <p class="text-[10px] uppercase tracking-[0.3em] text-luxury-charcoal/40 font-medium">Stock: <span x-text="formattedStock"></span></p>
@@ -320,7 +320,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                         @foreach ($relatedProducts as $related)
                             <a href="{{ route('products.show', $related) }}" class="group block">
-                                <div class="relative aspect-[4/5] bg-white flex items-center justify-center p-10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] transition-all duration-700 border border-luxury-gold/5 group-hover:border-luxury-gold/20">
+                                <div class="relative aspect-[4/5] bg-white rounded-2xl flex items-center justify-center p-10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] transition-all duration-700 border border-luxury-gold/5 group-hover:border-luxury-gold/20">
                                     @if ($related->images->isNotEmpty())
                                         @php
                                             $relatedImageUrl = $related->images->first()->image_url;
@@ -333,7 +333,7 @@
                                 <div class="mt-10 text-center space-y-3">
                                     <p class="text-[8px] text-luxury-gold font-bold tracking-[0.5em] uppercase">{{ $related->brand->name ?? 'Unknown Brand' }}</p>
                                     <h3 class="font-serif text-2xl font-light group-hover:italic transition-all duration-500">{{ $related->name }}</h3>
-                                    <p class="text-[9px] text-luxury-charcoal font-medium tracking-widest">Rp {{ number_format($related->variants->first()->price ?? 0, 0, ',', '.') }}</p>
+                                    <p class="text-xs text-luxury-charcoal font-bold tracking-widest">Rp {{ number_format($related->variants->first()->price ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </a>
                         @endforeach

@@ -3,13 +3,22 @@
 @section('title', "Compare Fragrances - Sanctum")
 
 @section('content')
-<div class="pt-32 pb-24 px-6 md:px-24 bg-luxury-cream min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <span class="text-luxury-gold text-[9px] font-bold tracking-[0.5em] uppercase">Side by Side</span>
-            <h1 class="text-4xl md:text-5xl font-serif font-light mt-4">Compare <span class="italic">Fragrances</span></h1>
-            <p class="text-luxury-charcoal/50 text-sm mt-4 max-w-lg mx-auto font-light">Select two distinct creations to juxtapose their olfactory profiles, notes, and performance characteristics.</p>
+<div class="animate-fade-in relative min-h-screen">
+    {{-- Hero Section --}}
+    <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('images/compare-hero.png') }}" alt="Sanctum Compare" class="w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-b from-luxury-cream/20 via-transparent to-luxury-cream"></div>
         </div>
+        
+        <div class="relative z-10 text-center px-6 mt-16">
+            <span class="text-[10px] uppercase tracking-[0.5em] text-luxury-gold mb-6 block font-bold">Side by Side</span>
+            <h1 class="text-5xl md:text-7xl font-serif text-luxury-charcoal mb-4">Compare <span class="italic">Fragrances</span></h1>
+            <p class="text-luxury-charcoal/80 text-sm mt-6 max-w-lg mx-auto font-light leading-relaxed">Select two distinct creations to juxtapose their olfactory profiles, notes, and performance characteristics.</p>
+        </div>
+    </section>
+
+    <div class="px-6 md:px-24 pb-24 max-w-7xl mx-auto -mt-10 relative z-20">
 
         {{-- Form Pilihan --}}
         <form method="GET" action="{{ route('compare.index') }}" class="bg-white p-8 border border-luxury-gold/10 mb-16 shadow-xl relative z-20">
@@ -47,14 +56,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
                 
                 {{-- Kolom 1 --}}
-                <div class="border border-luxury-gold/10 bg-white p-8 lg:p-12 relative overflow-hidden group">
+                <div class="border border-luxury-gold/10 bg-white rounded-2xl p-8 lg:p-12 relative overflow-hidden group">
                     @if($product1)
                         @php
                             $img1 = $product1->images->first()?->image_url;
                             $resolvedImg1 = $img1 ? (\Illuminate\Support\Str::startsWith($img1, ['http://', 'https://', '/']) ? $img1 : asset('storage/' . ltrim($img1, '/'))) : null;
                         @endphp
                         
-                        <div class="aspect-square bg-luxury-charcoal/5 mb-8 flex items-center justify-center p-8 relative">
+                        <div class="aspect-square rounded-xl bg-luxury-charcoal/5 mb-8 flex items-center justify-center p-8 relative">
                             @if($resolvedImg1)
                             <img src="{{ $resolvedImg1 }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700">
                             @endif
@@ -133,14 +142,14 @@
                 </div>
 
                 {{-- Kolom 2 --}}
-                <div class="border border-luxury-gold/10 bg-white p-8 lg:p-12 relative overflow-hidden group">
+                <div class="border border-luxury-gold/10 bg-white rounded-2xl p-8 lg:p-12 relative overflow-hidden group">
                     @if($product2)
                         @php
                             $img2 = $product2->images->first()?->image_url;
                             $resolvedImg2 = $img2 ? (\Illuminate\Support\Str::startsWith($img2, ['http://', 'https://', '/']) ? $img2 : asset('storage/' . ltrim($img2, '/'))) : null;
                         @endphp
                         
-                        <div class="aspect-square bg-luxury-charcoal/5 mb-8 flex items-center justify-center p-8 relative">
+                        <div class="aspect-square rounded-xl bg-luxury-charcoal/5 mb-8 flex items-center justify-center p-8 relative">
                             @if($resolvedImg2)
                             <img src="{{ $resolvedImg2 }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700">
                             @endif

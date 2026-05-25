@@ -24,33 +24,49 @@
 
 	<div class="space-y-6">
 		<div>
-			<h2 class="text-sm font-bold uppercase tracking-widest text-gray-900">Dashboard Overview</h2>
-			<p class="text-gray-500 mt-1 text-xs">Welcome back, here's what's happening with your store today.</p>
+			<h2 class="text-sm font-bold uppercase tracking-widest text-luxury-charcoal">Dashboard Overview</h2>
+			<p class="text-luxury-charcoal/60 mt-1 text-xs">Welcome back, here's what's happening with your store today.</p>
 		</div>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-			<x-admin.ui.card class="p-6 border-b-2 border-[var(--color-secondary)]">
-				<p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Total Revenue</p>
-				<p class="text-2xl font-serif text-[#0F0F0F]">Rp {{ number_format((float) ($total_revenue ?? 0), 0, ',', '.') }}</p>
-				<p class="text-[10px] {{ $growthPercent >= 0 ? 'text-green-600' : 'text-red-600' }} font-bold mt-2">{{ $growthLabel }}</p>
+			<x-admin.ui.card class="p-6 group">
+				<div class="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500"><i data-lucide="banknote" class="w-16 h-16 text-luxury-charcoal"></i></div>
+				<p class="text-[10px] uppercase tracking-widest text-luxury-charcoal/50 font-bold mb-1 relative z-10">Total Revenue</p>
+				<p class="text-3xl font-serif text-luxury-charcoal relative z-10">Rp {{ number_format((float) ($total_revenue ?? 0), 0, ',', '.') }}</p>
+				<p class="text-[10px] {{ $growthPercent >= 0 ? 'text-emerald-600' : 'text-red-600' }} font-bold mt-3 relative z-10 flex items-center gap-1">
+                    <i data-lucide="{{ $growthPercent >= 0 ? 'trending-up' : 'trending-down' }}" class="w-3 h-3"></i>
+                    {{ $growthLabel }}
+                </p>
 			</x-admin.ui.card>
 
-			<x-admin.ui.card class="p-6 border-b-2 border-[#0F0F0F]">
-				<p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Total Orders</p>
-				<p class="text-2xl font-serif text-[#0F0F0F]">{{ number_format((int) ($total_orders ?? 0)) }}</p>
-				<p class="text-[10px] text-green-600 font-bold mt-2">{{ (int) ($pending_orders ?? 0) }} orders pending</p>
+			<x-admin.ui.card class="p-6 group">
+				<div class="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500"><i data-lucide="shopping-bag" class="w-16 h-16 text-luxury-charcoal"></i></div>
+				<p class="text-[10px] uppercase tracking-widest text-luxury-charcoal/50 font-bold mb-1 relative z-10">Total Orders</p>
+				<p class="text-3xl font-serif text-luxury-charcoal relative z-10">{{ number_format((int) ($total_orders ?? 0)) }}</p>
+				<p class="text-[10px] text-luxury-gold font-bold mt-3 relative z-10 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3 h-3"></i>
+                    {{ (int) ($pending_orders ?? 0) }} orders pending
+                </p>
 			</x-admin.ui.card>
 
-			<x-admin.ui.card class="p-6 border-b-2 border-[#0F0F0F]">
-				<p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Customers</p>
-				<p class="text-2xl font-serif text-[#0F0F0F]">{{ number_format((int) ($total_customers ?? 0)) }}</p>
-				<p class="text-[10px] text-[var(--color-secondary)] font-bold mt-2">Active Resellers</p>
+			<x-admin.ui.card class="p-6 group">
+				<div class="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500"><i data-lucide="users" class="w-16 h-16 text-luxury-charcoal"></i></div>
+				<p class="text-[10px] uppercase tracking-widest text-luxury-charcoal/50 font-bold mb-1 relative z-10">Customers</p>
+				<p class="text-3xl font-serif text-luxury-charcoal relative z-10">{{ number_format((int) ($total_customers ?? 0)) }}</p>
+				<p class="text-[10px] text-luxury-gold font-bold mt-3 relative z-10 flex items-center gap-1">
+                    <i data-lucide="star" class="w-3 h-3"></i>
+                    Active Resellers
+                </p>
 			</x-admin.ui.card>
 
-			<div class="bg-[#0F0F0F] p-6 shadow-sm border border-gray-100 border-b-2 border-[var(--color-secondary)]">
-				<p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Avg. Order Value</p>
-				<p class="text-2xl font-serif text-white">Rp {{ number_format((float) ($average_order_value ?? 0), 0, ',', '.') }}</p>
-				<p class="text-[10px] text-white/50 font-bold mt-2">Consistent growth</p>
+			<div class="bg-gradient-to-br from-luxury-charcoal to-luxury-charcoal/90 rounded-2xl p-6 shadow-2xl border border-luxury-gold/20 relative overflow-hidden group">
+				<div class="absolute top-0 right-0 p-4 opacity-30 group-hover:scale-110 transition-transform duration-500"><i data-lucide="activity" class="w-16 h-16 text-luxury-gold"></i></div>
+				<p class="text-[10px] uppercase tracking-widest text-white/50 font-bold mb-1 relative z-10">Avg. Order Value</p>
+				<p class="text-3xl font-serif text-luxury-gold relative z-10 group-hover:scale-105 transition-transform duration-500 origin-left">Rp {{ number_format((float) ($average_order_value ?? 0), 0, ',', '.') }}</p>
+				<p class="text-[10px] text-luxury-gold/60 font-bold mt-3 relative z-10 flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i>
+                    Consistent growth
+                </p>
 			</div>
 		</div>
 

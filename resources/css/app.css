@@ -4,23 +4,53 @@
 @tailwind utilities;
 
 :root {
-    --color-nude: 245 241 234;
-    --color-gold: 197 160 89;
-    --color-charcoal: 26 26 26;
-    --color-cream: 253 251 247;
-    --color-clay: 234 227 213;
+    --color-charcoal: 25 41 59;    /* #19293B - Dark slate */
+    --color-gold: 65 110 139;      /* #416E8B - Mid blue for accents */
+    --color-clay: 111 159 188;     /* #6F9FBC - Light steel blue */
+    --color-nude: 203 218 230;     /* #CBDAE6 - Pale blue */
+    --color-cream: 235 241 246;    /* Lighter blue-white for main background */
     
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 }
 
+/* Cards & boxes: cool off-white/pale blue for contrast against background */
+.bg-white {
+    background-color: rgb(246 249 252) !important;
+}
+
+.bg-white\/50 {
+    background-color: rgba(246, 249, 252, 0.5) !important;
+}
+
+.bg-white\/90 {
+    background-color: rgba(246, 249, 252, 0.9) !important;
+}
+
+.bg-white\/80 {
+    background-color: rgba(246, 249, 252, 0.8) !important;
+}
+
+.bg-white\/10 {
+    background-color: rgba(246, 249, 252, 0.1) !important;
+}
+
+.bg-white\/5 {
+    background-color: rgba(246, 249, 252, 0.05) !important;
+}
+
+/* Override hardcoded bg-gray-100 placeholder cards */
+.bg-gray-100 {
+    background-color: rgb(203 218 230) !important; /* #CBDAE6 */
+}
+
 body.dark-theme,
 html.dark-theme-preload body {
-    --color-nude: 26 26 26;
-    --color-gold: 212 175 55;
-    --color-charcoal: 253 251 247;
-    --color-cream: 18 18 18;
-    --color-clay: 38 38 38;
+    --color-nude: 25 41 59;
+    --color-gold: 111 159 188;
+    --color-charcoal: 246 249 252;
+    --color-cream: 15 23 33;
+    --color-clay: 37 62 81;
 }
 
 @layer base {
@@ -40,7 +70,8 @@ html.dark-theme-preload body {
     }
 
     .glass-nav {
-        @apply bg-luxury-cream/60 backdrop-blur-xl border-b border-luxury-gold/10;
+        background: rgba(235, 241, 246, 0.72);
+        @apply backdrop-blur-xl border-b border-luxury-gold/10;
     }
 }
 
@@ -176,10 +207,30 @@ body.dark-theme * {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(26, 26, 26, 0.1);
+    background: rgba(38, 32, 26, 0.12);
     border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(197, 160, 89, 0.5);
+    background: rgba(185, 148, 72, 0.5);
 }
+
+/* ============================================
+   GLOBAL FONT READABILITY OVERRIDES
+   ============================================ */
+.text-luxury-charcoal\/30 { color: rgb(38 32 26 / 0.55) !important; }
+.text-luxury-charcoal\/40 { color: rgb(38 32 26 / 0.6) !important; }
+.text-luxury-charcoal\/50 { color: rgb(38 32 26 / 0.68) !important; }
+.text-luxury-charcoal\/60 { color: rgb(38 32 26 / 0.75) !important; }
+.text-luxury-charcoal\/70 { color: rgb(38 32 26 / 0.82) !important; }
+.text-gray-500 { color: rgb(38 32 26 / 0.6) !important; }
+
+.text-\[8px\] { font-size: 10px !important; }
+.text-\[9px\] { font-size: 11px !important; }
+.text-\[10px\] { font-size: 11px !important; }
+.luxury-button { font-size: 11px !important; }
+
+.opacity-30 { opacity: 0.5 !important; }
+.opacity-40 { opacity: 0.55 !important; }
+
+.glass-nav a, .glass-nav button { font-weight: 500; }
